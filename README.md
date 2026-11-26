@@ -102,10 +102,6 @@ npm run preview:panel
 
 ---
 
-## 🙏 灵感与致谢
-
-- 记忆衰减、按证据召回与「平时不占上下文」理念受 [Yuuyuko-uu/dsh-fish-memory（鱼的记忆）](https://github.com/Yuuyuko-uu/dsh-fish-memory) 启发；
-- 2D / 3D 可视化记忆星图与多主题设计受 [lxfight-s-Astrbot-Plugins/astrbot_plugin_livingmemory](https://github.com/lxfight-s-Astrbot-Plugins/astrbot_plugin_livingmemory) 启发。
 
 ## 📄 License
 
