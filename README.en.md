@@ -57,10 +57,6 @@ chmod +x install.sh && ./install.sh
 npm test
 ```
 
-## 🙏 Inspiration
-
-- Decay & evidence-based recall inspired by [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory).
-- Interactive 2D/3D Star Map visualization inspired by [astrbot_plugin_livingmemory](https://github.com/lxfight-s-Astrbot-Plugins/astrbot_plugin_livingmemory).
 
 ## 📄 License
 
