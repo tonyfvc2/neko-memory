@@ -1,0 +1,24 @@
+{
+  "name": "neko-memory",
+  "version": "1.0.0",
+  "description": "Zero-dependency local long-term memory plugin with 2D/3D interactive Star Map for Google Antigravity",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "test": "node --test test/memory-store.test.mjs",
+    "preview:panel": "node sidecars/memory_panel/server.mjs"
+  },
+  "keywords": [
+    "antigravity",
+    "antigravity-plugin",
+    "memory",
+    "long-term-memory",
+    "mcp",
+    "sidecar",
+    "sqlite",
+    "star-map"
+  ]
+}

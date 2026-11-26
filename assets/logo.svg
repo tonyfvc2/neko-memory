@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="108" height="108" rx="28" fill="url(#bg)"/>
+  <!-- Cat ears -->
+  <polygon points="30,52 38,24 58,44" fill="#fff" opacity="0.95"/>
+  <polygon points="98,52 90,24 70,44" fill="#fff" opacity="0.95"/>
+  <!-- Cat head -->
+  <ellipse cx="64" cy="68" rx="34" ry="28" fill="#fff" opacity="0.95"/>
+  <!-- Eyes -->
+  <circle cx="51" cy="66" r="4.5" fill="#4f46e5"/>
+  <circle cx="77" cy="66" r="4.5" fill="#4f46e5"/>
+  <circle cx="52.5" cy="64.5" r="1.5" fill="#fff"/>
+  <circle cx="78.5" cy="64.5" r="1.5" fill="#fff"/>
+  <!-- Cute nose & mouth -->
+  <polygon points="64,72 61,76 67,76" fill="#ec4899"/>
+  <path d="M58 79 Q64 84 70 79" stroke="#4f46e5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Sparkle (memory star) -->
+  <path d="M98 22 L101 29 L108 32 L101 35 L98 42 L95 35 L88 32 L95 29 Z" fill="#fde047"/>
+</svg>

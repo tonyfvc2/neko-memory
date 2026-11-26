@@ -1,0 +1,21 @@
+{
+  "command": "node",
+  "args": ["server.mjs"],
+  "restart_policy": "always",
+  "display_name": "猫猫的记忆",
+  "description": "长期记忆管理面板：查看鲜活度、按证据测试召回、增删改查记忆、查看召回日志与导入 Markdown 笔记。",
+  "has_web_ui": true,
+  "agent_permissions": {
+    "allows_user_interactions": true
+  },
+  "ui_config": {
+    "display_name": "猫猫的记忆",
+    "views": [
+      {
+        "path": "/",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "title": "猫猫的记忆"
+      }
+    ]
+  }
+}

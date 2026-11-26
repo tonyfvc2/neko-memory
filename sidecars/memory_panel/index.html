@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>猫猫的记忆 · Neko Memory 星图</title>
+<style>
+  :root, body[data-theme="cosmos"] {
+    --bg: #0b0d17;
+    --panel: #131728;
+    --card: #1a2036;
+    --border: rgba(139, 152, 214, 0.2);
+    --text: #eef0fa;
+    --muted: #939dc0;
+    --accent: #8b5cf6;
+    --accent-2: #38bdf8;
+    --accent-soft: rgba(139, 92, 246, 0.18);
+    --good: #34d399;
+    --warn: #fbbf24;
+    --low: #f472b6;
+    --canvas-bg-1: #070913;
+    --canvas-bg-2: #121631;
+    --star-label: rgba(238, 240, 250, 0.9);
+  }
+  body[data-theme="glass"] {
+    --bg: #0f172a;
+    --panel: rgba(30, 41, 59, 0.65);
+    --card: rgba(30, 41, 59, 0.55);
+    --border: rgba(148, 163, 184, 0.25);
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #6366f1;
+    --accent-2: #22d3ee;
+    --accent-soft: rgba(99, 102, 241, 0.2);
+    --canvas-bg-1: #0b1120;
+    --canvas-bg-2: #1e1b4b;
+    --star-label: rgba(241, 245, 249, 0.92);
+  }
+  body[data-theme="paper"] {
+    --bg: #f6f1e7;
+    --panel: #fffdf8;
+    --card: #fdf9f0;
+    --border: rgba(120, 97, 72, 0.18);
+    --text: #2c241b;
+    --muted: #786958;
+    --accent: #7c5cff;
+    --accent-2: #0284c7;
+    --accent-soft: rgba(124, 92, 255, 0.12);
+    --canvas-bg-1: #1b1726;
+    --canvas-bg-2: #292138;
+    --star-label: rgba(255, 250, 240, 0.92);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; transition: background 0.25s, color 0.25s;
+  }
+  .header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .header-right { display: flex; gap: 6px; align-items: center; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; backdrop-filter: blur(10px); }
+  .stat-val { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); }
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px; }
+  .tab {
+    background: var(--panel); border: 1px solid var(--border); color: var(--muted);
+    padding: 7px 6px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; text-align: center;
+  }
+  .tab.active { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
+  .toolbar { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+  input, select, textarea {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 6px 9px; font-size: 12px; outline: none; font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  .grow { flex: 1; min-width: 110px; }
+  button {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 6px 11px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  button.ghost { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
+  button.pill { padding: 3px 8px; font-size: 11px; border-radius: 999px; }
+  button.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.danger { background: rgba(244, 114, 182, 0.16); color: var(--low); border: 1px solid rgba(244, 114, 182, 0.35); }
+  button:hover { filter: brightness(1.08); }
+
+  /* Star Map */
+  .starmap-wrap {
+    position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
+    background: radial-gradient(circle at 50% 45%, var(--canvas-bg-2) 0%, var(--canvas-bg-1) 100%);
+    height: 390px; margin-bottom: 10px; user-select: none;
+  }
+  #starmap-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+  #starmap-canvas:active { cursor: grabbing; }
+  .map-hud-top {
+    position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between;
+    align-items: center; gap: 6px; pointer-events: none; flex-wrap: wrap;
+  }
+  .map-hud-top > * { pointer-events: auto; }
+  .map-controls { display: flex; gap: 4px; background: rgba(11, 13, 23, 0.65); padding: 4px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px); }
+  .map-legend {
+    position: absolute; bottom: 8px; left: 8px; display: flex; gap: 8px; flex-wrap: wrap;
+    background: rgba(11, 13, 23, 0.65); padding: 5px 9px; border-radius: 999px;
+    font-size: 10px; color: #dbe1f7; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+  }
+  .leg-item { display: inline-flex; align-items: center; gap: 4px; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .map-hint {
+    position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: rgba(219, 225, 247, 0.72);
+    background: rgba(11, 13, 23, 0.55); padding: 4px 8px; border-radius: 999px; pointer-events: none;
+  }
+
+  .inspector {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+    margin-bottom: 10px;
+  }
+  .inspector-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 6px; }
+  .neighbor-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .neighbor-chip {
+    font-size: 11px; padding: 3px 8px; border-radius: 8px; background: var(--accent-soft); color: var(--text);
+    border: 1px solid var(--border); cursor: pointer;
+  }
+  .neighbor-chip:hover { border-color: var(--accent); }
+
+  .form-box {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+  .card.archived { opacity: 0.6; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: var(--muted); }
+  .cat { padding: 1px 7px; border-radius: 6px; font-weight: 600; color: #fff; font-size: 11px; }
+  .card-content { font-size: 13px; white-space: pre-wrap; word-break: break-word; margin-bottom: 8px; }
+  .fresh-bar { height: 4px; background: rgba(148,163,184,0.18); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .fresh-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .card-actions { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); flex-wrap: wrap; gap: 6px; }
+  .card-btns { display: flex; gap: 5px; flex-wrap: wrap; }
+  .card-btns button { padding: 3px 8px; font-size: 11px; }
+  .empty { text-align: center; color: var(--muted); padding: 24px 12px; background: var(--panel); border-radius: 10px; border: 1px dashed var(--border); }
+  .toast { position: fixed; bottom: 14px; right: 14px; background: #1e2236; color: #fff; border: 1px solid var(--accent); padding: 8px 14px; border-radius: 8px; font-size: 12px; display: none; z-index: 99; }
+</style>
+</head>
+<body data-theme="cosmos">
+  <div class="header">
+    <div class="title">🐾 猫猫的记忆 <span class="badge">记忆星图 v1.0</span></div>
+    <div class="header-right">
+      <select id="theme-sel" onchange="setTheme(this.value)" title="切换外观主题">
+        <option value="cosmos">🌌 深空星图</option>
+        <option value="glass">🫧 液态玻璃</option>
+        <option value="paper">📜 暖光书页</option>
+      </select>
+      <button class="ghost" onclick="refreshAll()">刷新</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="st-active">-</div><div class="stat-lbl">活跃星辰</div></div>
+    <div class="stat"><div class="stat-val" id="st-recalls">-</div><div class="stat-lbl">累计召回</div></div>
+    <div class="stat"><div class="stat-val" id="st-archived">-</div><div class="stat-lbl">星尘归档</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-map" onclick="switchTab('map')">✨ 记忆星图</button>
+    <button class="tab" id="tab-list" onclick="switchTab('list')">📚 记忆库</button>
+    <button class="tab" id="tab-recall" onclick="switchTab('recall')">🔍 召回测试</button>
+    <button class="tab" id="tab-logs" onclick="switchTab('logs')">🕒 召回记录</button>
+  </div>
+
+  <!-- TAB 1: MEMORY STAR MAP -->
+  <div id="view-map">
+    <div class="starmap-wrap">
+      <canvas id="starmap-canvas"></canvas>
+      <div class="map-hud-top">
+        <div class="map-controls">
+          <button class="ghost pill active" id="btn-2d" onclick="setMapMode('2d')">2D 星座</button>
+          <button class="ghost pill" id="btn-3d" onclick="setMapMode('3d')">3D 星空</button>
+          <button class="ghost pill" onclick="resetCamera()">居中复位</button>
+          <button class="ghost pill" id="btn-spin" onclick="toggleAutoSpin()">公转: 开</button>
+        </div>
+        <select id="map-cat" onchange="loadGraph()" style="background:rgba(11,13,23,0.72);color:#eef0fa;border-color:rgba(255,255,255,0.16);">
+          <option value="">全部星座</option>
+          <option value="preference">偏好 (365天)</option>
+          <option value="project">项目 (60天)</option>
+          <option value="decision">决策 (90天)</option>
+          <option value="pitfall">踩坑 (90天)</option>
+          <option value="fact">事实 (30天)</option>
+          <option value="handoff">交接 (14天)</option>
+        </select>
+      </div>
+      <div class="map-legend">
+        <span class="leg-item"><i class="leg-dot" style="background:#a855f7"></i>偏好</span>
+        <span class="leg-item"><i class="leg-dot" style="background:#38bdf8"></i>项目</span>
+        <span class="leg-item"><i class="leg-dot" style="background:#fbbf24"></i>决策</span>
+        <span class="leg-item"><i class="leg-dot" style="background:#f472b6"></i>踩坑</span>
+        <span class="leg-item"><i class="leg-dot" style="background:#818cf8"></i>事实</span>
+        <span class="leg-item"><i class="leg-dot" style="background:#34d399"></i>交接</span>
+      </div>
+      <div class="map-hint" id="map-hint">拖拽画布 · 滚轮缩放 · 点击星辰查看关联</div>
+    </div>
+
+    <div class="inspector" id="star-inspector">
+      <div class="inspector-empty">✨ 点击上方任意一颗记忆星辰，查看完整内容、鲜活度与相连的星座记忆~</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MEMORY LIST -->
+  <div id="view-list" style="display:none;">
+    <div class="form-box">
+      <textarea id="new-content" rows="2" placeholder="写下想让猫猫记住的事（偏好、项目路径、约定、踩坑记录...）"></textarea>
+      <div class="row">
+        <select id="new-cat" onchange="onCatChange()">
+          <option value="preference" selected>偏好 (默认 365天)</option>
+          <option value="project">项目 (默认 60天)</option>
+          <option value="decision">决策 (默认 90天)</option>
+          <option value="pitfall">踩坑 (默认 90天)</option>
+          <option value="fact">事实 (默认 30天)</option>
+          <option value="handoff">交接 (默认 14天)</option>
+        </select>
+        <select id="new-imp">
+          <option value="5" selected>重要度 5 (核心)</option>
+          <option value="4">重要度 4 (高)</option>
+          <option value="3">重要度 3 (中)</option>
+          <option value="2">重要度 2 (低)</option>
+        </select>
+        <input id="new-hl" type="number" value="365" min="1" max="3650" style="width:74px" title="半衰期（天）" />
+        <button class="ghost pill" type="button" onclick="setHl(180)">180天</button>
+        <button class="ghost pill" type="button" onclick="setHl(365)">365天</button>
+      </div>
+      <div class="row">
+        <input id="new-tags" class="grow" placeholder="标签（逗号分隔，星图会自动连线相同标签）" />
+        <button onclick="addMemory()">✨ 写入星图</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input id="filter-q" class="grow" placeholder="筛选记忆内容 / 标签..." oninput="loadList()" />
+      <select id="filter-cat" onchange="loadList()">
+        <option value="">全部分类</option>
+        <option value="preference">偏好</option>
+        <option value="project">项目</option>
+        <option value="decision">决策</option>
+        <option value="pitfall">踩坑</option>
+        <option value="fact">事实</option>
+        <option value="handoff">交接</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);">
+        <input type="checkbox" id="filter-arch" onchange="loadList()" /> 含归档
+      </label>
+    </div>
+    <div id="memory-list" class="list"></div>
+  </div>
+
+  <!-- TAB 3: RECALL TEST -->
+  <div id="view-recall" style="display:none;">
+    <div class="toolbar">
+      <input id="recall-q" class="grow" placeholder="输入一句话，测试猫猫会按证据召回哪些记忆..." onkeydown="if(event.key==='Enter') runRecall()" />
+      <button onclick="runRecall()">测试召回</button>
+    </div>
+    <div id="recall-results" class="list">
+      <div class="empty">输入关键词或问题，查看中文分词命中证据、鲜活度与综合得分。</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: RECALL LOGS -->
+  <div id="view-logs" style="display:none;">
+    <div id="logs-list" class="list"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const CAT_META = {
+    preference: { label: '偏好', color: '#a855f7', hl: 365 },
+    project:    { label: '项目', color: '#38bdf8', hl: 60  },
+    decision:   { label: '决策', color: '#fbbf24', hl: 90  },
+    pitfall:    { label: '踩坑', color: '#f472b6', hl: 90  },
+    fact:       { label: '事实', color: '#818cf8', hl: 30  },
+    handoff:    { label: '交接', color: '#34d399', hl: 14  }
+  };
+
+  let currentTab = 'map';
+  let mapMode = '2d';
+  let autoSpin = true;
+  let graphData = { nodes: [], edges: [] };
+  let simNodes = [];
+  let selectedId = null;
+  let hoveredId = null;
+
+  // Camera state
+  let cam = { x: 0, y: 0, zoom: 1, rotY: 0.4, rotX: 0.22 };
+  let dragState = { down: false, moved: false, startX: 0, startY: 0, camX: 0, camY: 0, rotY: 0, rotX: 0, dragNode: null };
+
+  // Background ambient stars
+  const bgStars = Array.from({ length: 85 }, () => ({
+    x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 1.4, phase: Math.random() * Math.PI * 2
+  }));
+
+  function setTheme(t) {
+    document.body.setAttribute('data-theme', t);
+    try { localStorage.setItem('neko_mem_theme', t); } catch {}
+  }
+  try {
+    const saved = localStorage.getItem('neko_mem_theme');
+    if (saved) { document.getElementById('theme-sel').value = saved; setTheme(saved); }
+  } catch {}
+
+  function onCatChange() {
+    const cat = document.getElementById('new-cat').value;
+    document.getElementById('new-hl').value = (CAT_META[cat] || CAT_META.fact).hl;
+    if (cat === 'preference') document.getElementById('new-imp').value = '5';
+  }
+  function setHl(days) { document.getElementById('new-hl').value = days; }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.style.display = 'block';
+    clearTimeout(window._tt);
+    window._tt = setTimeout(() => { el.style.display = 'none'; }, 2200);
+  }
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+  function freshColor(pct) {
+    if (pct >= 60) return 'var(--good)';
+    if (pct >= 30) return 'var(--warn)';
+    return 'var(--low)';
+  }
+  async function api(url, opts) {
+    const r = await fetch(url, opts);
+    return r.json();
+  }
+
+  function switchTab(t) {
+    currentTab = t;
+    ['map', 'list', 'recall', 'logs'].forEach(k => {
+      document.getElementById('tab-' + k).classList.toggle('active', k === t);
+      document.getElementById('view-' + k).style.display = k === t ? '' : 'none';
+    });
+    if (t === 'map') { resizeCanvas(); loadGraph(); }
+    if (t === 'list') loadList();
+    if (t === 'logs') loadLogs();
+  }
+
+  async function loadStats() {
+    const s = await api('./api/stats');
+    document.getElementById('st-active').textContent = s.active_count ?? 0;
+    document.getElementById('st-recalls').textContent = s.total_recalls ?? 0;
+    document.getElementById('st-archived').textContent = s.archived_count ?? 0;
+  }
+
+  // ===== STAR MAP ENGINE =====
+  const canvas = document.getElementById('starmap-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(300, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(260, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  function setMapMode(m) {
+    mapMode = m;
+    document.getElementById('btn-2d').classList.toggle('active', m === '2d');
+    document.getElementById('btn-3d').classList.toggle('active', m === '3d');
+    document.getElementById('map-hint').textContent = m === '3d'
+      ? '拖拽 360° 旋转星空 · 滚轮缩放 · 点击星辰查看关联'
+      : '拖拽画布或星辰 · 滚轮缩放 · 点击星辰查看关联';
+    resetCamera();
+  }
+
+  function toggleAutoSpin() {
+    autoSpin = !autoSpin;
+    document.getElementById('btn-spin').textContent = autoSpin ? '公转: 开' : '公转: 关';
+  }
+
+  function resetCamera() {
+    cam = { x: 0, y: 0, zoom: 1, rotY: 0.4, rotX: 0.22 };
+  }
+
+  function layoutNodes(nodes) {
+    const n = nodes.length;
+    const prevMap = new Map(simNodes.map(s => [s.id, s]));
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    simNodes = nodes.map((node, i) => {
+      const prev = prevMap.get(node.id);
+      // 3D Fibonacci sphere coordinates
+      const y3 = n <= 1 ? 0 : 1 - (i / Math.max(1, n - 1)) * 2;
+      const rad3 = Math.sqrt(Math.max(0, 1 - y3 * y3));
+      const theta3 = goldenAngle * i;
+      const R3 = 125;
+
+      // 2D initial spiral layout
+      const angle2 = i * 2.39996;
+      const dist2 = n <= 1 ? 0 : 42 + Math.sqrt(i + 1) * 44;
+      return {
+        ...node,
+        x: prev ? prev.x : Math.cos(angle2) * dist2,
+        y: prev ? prev.y : Math.sin(angle2) * dist2,
+        vx: 0, vy: 0,
+        sx3: Math.cos(theta3) * rad3 * R3,
+        sy3: y3 * R3,
+        sz3: Math.sin(theta3) * rad3 * R3,
+        baseRadius: 5.5 + (node.importance || 3) * 1.6 + Math.min(5, (node.recall_count || 0) * 0.6),
+        screenX: 0, screenY: 0, screenR: 8, depth: 1
+      };
+    });
+  }
+
+  function stepForce2D() {
+    const N = simNodes.length;
+    if (N <= 1) return;
+    const nodeMap = new Map(simNodes.map(n => [n.id, n]));
+    // Gentle repulsion + center gravity
+    for (let i = 0; i < N; i++) {
+      const a = simNodes[i];
+      if (dragState.dragNode === a) continue;
+      a.vx -= a.x * 0.0022;
+      a.vy -= a.y * 0.0022;
+      for (let j = i + 1; j < N; j++) {
+        const b = simNodes[j];
+        let dx = a.x - b.x, dy = a.y - b.y;
+        let d2 = dx * dx + dy * dy + 0.01;
+        if (d2 < 24000) {
+          const f = 320 / d2;
+          const d = Math.sqrt(d2);
+          const fx = (dx / d) * f, fy = (dy / d) * f;
+          a.vx += fx; a.vy += fy;
+          if (dragState.dragNode !== b) { b.vx -= fx; b.vy -= fy; }
+        }
+      }
+    }
+    // Spring attraction along edges
+    for (const e of graphData.edges) {
+      const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
+      if (!a || !b) continue;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.sqrt(dx * dx + dy * dy) || 1;
+      const targetDist = 115 - e.weight * 35;
+      const pull = (d - targetDist) * 0.006 * (0.4 + e.weight);
+      const fx = (dx / d) * pull, fy = (dy / d) * pull;
+      if (dragState.dragNode !== a) { a.vx += fx; a.vy += fy; }
+      if (dragState.dragNode !== b) { b.vx -= fx; b.vy -= fy; }
+    }
+    for (const a of simNodes) {
+      if (dragState.dragNode === a) continue;
+      a.vx *= 0.86; a.vy *= 0.86;
+      a.x += Math.max(-6, Math.min(6, a.vx));
+      a.y += Math.max(-6, Math.min(6, a.vy));
+    }
+  }
+
+  function renderStarMap(ts) {
+    if (currentTab === 'map') {
+      const w = canvas.clientWidth || 400;
+      const h = canvas.clientHeight || 390;
+      ctx.clearRect(0, 0, w, h);
+
+      // Ambient twinkling background stars
+      for (const s of bgStars) {
+        const alpha = 0.2 + 0.45 * (0.5 + 0.5 * Math.sin(ts * 0.0015 + s.phase));
+        ctx.fillStyle = `rgba(210, 222, 255, ${alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (simNodes.length === 0) {
+        ctx.fillStyle = 'rgba(200, 210, 240, 0.7)';
+        ctx.font = '13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('星图暂无记忆，去「记忆库」写入第一颗星辰吧 ✨', w / 2, h / 2);
+      } else {
+        if (mapMode === '2d') {
+          stepForce2D();
+          for (const n of simNodes) {
+            n.screenX = w / 2 + (n.x + cam.x) * cam.zoom;
+            n.screenY = h / 2 + (n.y + cam.y) * cam.zoom;
+            n.screenR = n.baseRadius * Math.max(0.65, Math.min(1.6, cam.zoom));
+            n.depth = 1;
+          }
+        } else {
+          if (autoSpin && !dragState.down) cam.rotY += 0.0035;
+          const cosY = Math.cos(cam.rotY), sinY = Math.sin(cam.rotY);
+          const cosX = Math.cos(cam.rotX), sinX = Math.sin(cam.rotX);
+          for (const n of simNodes) {
+            const x1 = n.sx3 * cosY - n.sz3 * sinY;
+            const z1 = n.sx3 * sinY + n.sz3 * cosY;
+            const y2 = n.sy3 * cosX - z1 * sinX;
+            const z2 = n.sy3 * sinX + z1 * cosX;
+            const fov = 360;
+            const scale = (fov / (fov + z2 + 160)) * cam.zoom;
+            n.screenX = w / 2 + x1 * scale;
+            n.screenY = h / 2 + y2 * scale;
+            n.screenR = Math.max(3.5, n.baseRadius * scale * 1.15);
+            n.depth = scale;
+          }
+        }
+
+        const focusId = hoveredId ?? selectedId;
+        const neighborSet = new Set();
+        if (focusId !== null) {
+          neighborSet.add(focusId);
+          for (const e of graphData.edges) {
+            if (e.source === focusId) neighborSet.add(e.target);
+            if (e.target === focusId) neighborSet.add(e.source);
+          }
+        }
+        const nodeMap = new Map(simNodes.map(n => [n.id, n]));
+
+        // Draw constellation edges
+        for (const e of graphData.edges) {
+          const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
+          if (!a || !b) continue;
+          const isLit = focusId !== null && (e.source === focusId || e.target === focusId);
+          const dim = focusId !== null && !isLit;
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(a.screenX, a.screenY);
+          ctx.lineTo(b.screenX, b.screenY);
+          ctx.strokeStyle = isLit
+            ? `rgba(167, 139, 250, ${0.55 + e.weight * 0.4})`
+            : `rgba(148, 163, 224, ${dim ? 0.06 : (0.16 + e.weight * 0.28)})`;
+          ctx.lineWidth = isLit ? (1.4 + e.weight * 1.8) : (0.8 + e.weight * 1.1);
+          ctx.stroke();
+
+          if (isLit && e.reason) {
+            const mx = (a.screenX + b.screenX) / 2;
+            const my = (a.screenY + b.screenY) / 2;
+            ctx.font = '10px sans-serif';
+            ctx.fillStyle = 'rgba(224, 212, 255, 0.92)';
+            ctx.textAlign = 'center';
+            ctx.fillText(e.reason, mx, my - 4);
+          }
+          ctx.restore();
+        }
+
+        // Sort by depth so nearer stars render on top in 3D
+        const drawOrder = [...simNodes].sort((a, b) => a.depth - b.depth);
+        for (const n of drawOrder) {
+          const meta = CAT_META[n.category] || CAT_META.fact;
+          const isSel = n.id === selectedId;
+          const isHov = n.id === hoveredId;
+          const dim = focusId !== null && !neighborSet.has(n.id);
+          const freshAlpha = Math.max(0.28, Math.min(1, n.freshness || 0.8));
+          const alpha = dim ? 0.22 : freshAlpha * (mapMode === '3d' ? Math.max(0.35, Math.min(1, n.depth * 1.1)) : 1);
+
+          // Outer glow halo
+          const pulse = 1 + 0.08 * Math.sin(ts * 0.003 + n.id);
+          const haloR = n.screenR * (isSel || isHov ? 3.2 : 2.3) * pulse;
+          const grad = ctx.createRadialGradient(n.screenX, n.screenY, 0, n.screenX, n.screenY, haloR);
+          grad.addColorStop(0, meta.color + (dim ? '22' : '88'));
+          grad.addColorStop(1, meta.color + '00');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(n.screenX, n.screenY, haloR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Star core
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = meta.color;
+          ctx.beginPath();
+          ctx.arc(n.screenX, n.screenY, n.screenR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Bright center pinpoint
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(n.screenX, n.screenY, Math.max(1.8, n.screenR * 0.38), 0, Math.PI * 2);
+          ctx.fill();
+
+          if (isSel || isHov) {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.arc(n.screenX, n.screenY, n.screenR + 3.5, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          // Label
+          if (!dim || isSel || isHov) {
+            ctx.font = (isSel || isHov ? '600 11px ' : '10px ') + '-apple-system, "Microsoft YaHei", sans-serif';
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--star-label') || '#eef0fa';
+            ctx.textAlign = 'center';
+            ctx.fillText(n.label, n.screenX, n.screenY + n.screenR + 13);
+          }
+          ctx.restore();
+        }
+      }
+    }
+    requestAnimationFrame(renderStarMap);
+  }
+
+  function pickNode(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left, y = clientY - rect.top;
+    let best = null, bestDist = 9999;
+    for (const n of simNodes) {
+      const d = Math.hypot(n.screenX - x, n.screenY - y);
+      const hitR = Math.max(14, n.screenR + 6);
+      if (d <= hitR && d < bestDist) { best = n; bestDist = d; }
+    }
+    return best;
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    const hit = pickNode(e.clientX, e.clientY);
+    dragState = {
+      down: true, moved: false, startX: e.clientX, startY: e.clientY,
+      camX: cam.x, camY: cam.y, rotY: cam.rotY, rotX: cam.rotX,
+      dragNode: mapMode === '2d' ? hit : null
+    };
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragState.down) {
+      const hit = pickNode(e.clientX, e.clientY);
+      hoveredId = hit ? hit.id : null;
+      canvas.style.cursor = hit ? 'pointer' : 'grab';
+      return;
+    }
+    const dx = e.clientX - dragState.startX, dy = e.clientY - dragState.startY;
+    if (Math.hypot(dx, dy) > 4) dragState.moved = true;
+    if (mapMode === '2d') {
+      if (dragState.dragNode) {
+        dragState.dragNode.x += dx / cam.zoom;
+        dragState.dragNode.y += dy / cam.zoom;
+        dragState.startX = e.clientX;
+        dragState.startY = e.clientY;
+      } else {
+        cam.x = dragState.camX + dx / cam.zoom;
+        cam.y = dragState.camY + dy / cam.zoom;
+      }
+    } else {
+      cam.rotY = dragState.rotY + dx * 0.008;
+      cam.rotX = Math.max(-1.3, Math.min(1.3, dragState.rotX + dy * 0.008));
+    }
+  });
+  window.addEventListener('mouseup', (e) => {
+    if (!dragState.down) return;
+    const wasClick = !dragState.moved;
+    dragState.down = false;
+    dragState.dragNode = null;
+    if (wasClick) {
+      const hit = pickNode(e.clientX, e.clientY);
+      if (hit) selectStar(hit.id);
+      else { selectedId = null; renderInspector(); }
+    }
+  });
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.12 : 0.89;
+    cam.zoom = Math.max(0.45, Math.min(2.8, cam.zoom * factor));
+  }, { passive: false });
+
+  function selectStar(id) {
+    selectedId = id;
+    const n = simNodes.find(s => s.id === id);
+    if (n && mapMode === '2d') {
+      cam.x = -n.x; cam.y = -n.y;
+    }
+    renderInspector();
+  }
+
+  function renderInspector() {
+    const el = document.getElementById('star-inspector');
+    if (selectedId === null) {
+      el.innerHTML = '<div class="inspector-empty">✨ 点击上方任意一颗记忆星辰，查看完整内容、鲜活度与相连的星座记忆~</div>';
+      return;
+    }
+    const m = simNodes.find(s => s.id === selectedId);
+    if (!m) { selectedId = null; renderInspector(); return; }
+    const meta = CAT_META[m.category] || CAT_META.fact;
+    const neighbors = [];
+    for (const e of graphData.edges) {
+      if (e.source === m.id) {
+        const t = simNodes.find(s => s.id === e.target);
+        if (t) neighbors.push({ node: t, reason: e.reason });
+      } else if (e.target === m.id) {
+        const s = simNodes.find(s => s.id === e.source);
+        if (s) neighbors.push({ node: s, reason: e.reason });
+      }
+    }
+    el.innerHTML = `
+      <div class="card-top">
+        <div><span class="cat" style="background:${meta.color}">${esc(meta.label)}</span> #${m.id} · 重要度 ${m.importance}/5 · 半衰期 <b>${m.half_life_days}天</b></div>
+        <div>${esc(m.time_label)}</div>
+      </div>
+      <div class="card-content">${esc(m.content)}</div>
+      <div class="fresh-bar"><div class="fresh-fill" style="width:${m.freshness_pct}%;background:${freshColor(m.freshness_pct)}"></div></div>
+      <div class="card-actions">
+        <div>鲜活度 ${m.freshness_pct}% · 召回 ${m.recall_count} 次${m.tags ? ' · 🏷 ' + esc(m.tags) : ''}</div>
+        <div class="card-btns">
+          <button class="ghost" onclick="updateHalfLife(${m.id}, 180)">设为 180天</button>
+          <button class="ghost" onclick="updateHalfLife(${m.id}, 365)">设为 365天</button>
+          <button class="danger" onclick="toggleArchive(${m.id}, true)">归档</button>
+        </div>
+      </div>
+      ${neighbors.length > 0 ? `
+        <div style="margin-top:8px;font-size:11px;color:var(--muted);">🔗 关联星辰（点击聚焦跳转）：</div>
+        <div class="neighbor-list">
+          ${neighbors.map(nb => `<span class="neighbor-chip" onclick="selectStar(${nb.node.id})" title="${esc(nb.reason)}">✦ #${nb.node.id} ${esc(nb.node.label)}</span>`).join('')}
+        </div>` : ''}
+    `;
+  }
+
+  async function loadGraph() {
+    const cat = encodeURIComponent(document.getElementById('map-cat').value);
+    const data = await api(`./api/graph?category=${cat}`);
+    graphData = { nodes: data.nodes || [], edges: data.edges || [] };
+    layoutNodes(graphData.nodes);
+    if (selectedId !== null && !simNodes.some(s => s.id === selectedId)) selectedId = null;
+    renderInspector();
+  }
+
+  // ===== LIST & CRUD =====
+  function renderCard(m, extraHtml = '') {
+    const meta = CAT_META[m.category] || CAT_META.fact;
+    return `
+      <div class="card ${m.archived ? 'archived' : ''}">
+        <div class="card-top">
+          <div><span class="cat" style="background:${meta.color}">${esc(meta.label)}</span> #${m.id} · 重要度 ${m.importance}/5 · 半衰期 ${m.half_life_days}天</div>
+          <div>${esc(m.time_label)}</div>
+        </div>
+        <div class="card-content">${esc(m.content)}</div>
+        <div class="fresh-bar"><div class="fresh-fill" style="width:${m.freshness_pct}%;background:${freshColor(m.freshness_pct)}"></div></div>
+        <div class="card-actions">
+          <div>鲜活度 ${m.freshness_pct}% · 召回 ${m.recall_count} 次${m.tags ? ' · 🏷 ' + esc(m.tags) : ''}${extraHtml}</div>
+          <div class="card-btns">
+            ${!m.archived ? `<button class="ghost" onclick="focusInMap(${m.id})">星图定位</button>` : ''}
+            ${m.archived
+              ? `<button class="ghost" onclick="toggleArchive(${m.id}, false)">恢复</button><button class="danger" onclick="hardDelete(${m.id})">彻底删除</button>`
+              : `<button class="ghost" onclick="toggleArchive(${m.id}, true)">归档</button>`}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function focusInMap(id) {
+    switchTab('map');
+    setTimeout(() => selectStar(id), 150);
+  }
+
+  async function loadList() {
+    const q = encodeURIComponent(document.getElementById('filter-q').value.trim());
+    const cat = encodeURIComponent(document.getElementById('filter-cat').value);
+    const arch = document.getElementById('filter-arch').checked ? '1' : '0';
+    const data = await api(`./api/memories?search=${q}&category=${cat}&include_archived=${arch}`);
+    const el = document.getElementById('memory-list');
+    if (!data.items || data.items.length === 0) {
+      el.innerHTML = '<div class="empty">还没有记住任何事喵~ 在上面写一条，或者聊天时告诉猫猫「记住这个」吧！</div>';
+      return;
+    }
+    el.innerHTML = data.items.map(m => renderCard(m)).join('');
+  }
+
+  async function addMemory() {
+    const content = document.getElementById('new-content').value.trim();
+    if (!content) return toast('请先输入记忆内容');
+    const body = {
+      content,
+      category: document.getElementById('new-cat').value,
+      importance: Number(document.getElementById('new-imp').value),
+      half_life_days: Number(document.getElementById('new-hl').value) || undefined,
+      tags: document.getElementById('new-tags').value.trim()
+    };
+    await api('./api/memories', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    document.getElementById('new-content').value = '';
+    document.getElementById('new-tags').value = '';
+    toast('已点亮一颗新的记忆星辰 ✨');
+    refreshAll();
+  }
+
+  async function updateHalfLife(id, days) {
+    await api('./api/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, half_life_days: days }) });
+    toast(`已将记忆 #${id} 的半衰期设为 ${days} 天`);
+    await refreshAll();
+  }
+
+  async function toggleArchive(id, archived) {
+    await api('./api/archive', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, archived }) });
+    toast(archived ? '已归档（可随时恢复）' : '已恢复记忆');
+    if (archived && selectedId === id) selectedId = null;
+    refreshAll();
+  }
+
+  async function hardDelete(id) {
+    await api('./api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    toast('已彻底删除');
+    refreshAll();
+  }
+
+  async function runRecall() {
+    const query = document.getElementById('recall-q').value.trim();
+    if (!query) return;
+    const data = await api('./api/recall', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, limit: 8 }) });
+    const el = document.getElementById('recall-results');
+    if (!data.items || data.items.length === 0) {
+      el.innerHTML = '<div class="empty">没有命中足够证据的记忆（平时不占上下文~）</div>';
+      return;
+    }
+    el.innerHTML = data.items.map(m => renderCard(m, ` · 得分 ${m.score} · 命中: ${(m.matched_terms || []).join(', ')}`)).join('');
+  }
+
+  async function loadLogs() {
+    const data = await api('./api/logs');
+    const el = document.getElementById('logs-list');
+    if (!data.items || data.items.length === 0) {
+      el.innerHTML = '<div class="empty">还没有召回记录。</div>';
+      return;
+    }
+    el.innerHTML = data.items.map(l => `
+      <div class="card">
+        <div class="card-top">
+          <div>命中星辰 #${l.memory_id} · 得分 ${l.score}</div>
+          <div>${esc(l.time_label)}</div>
+        </div>
+        <div style="font-size:11px;color:var(--accent);margin-bottom:4px;">查询：${esc(l.query)}</div>
+        <div class="card-content" style="margin-bottom:0;">${esc(l.content || '（已删除）')}</div>
+      </div>`).join('');
+  }
+
+  async function refreshAll() {
+    await loadStats();
+    await loadGraph();
+    if (currentTab === 'list') await loadList();
+    if (currentTab === 'logs') await loadLogs();
+  }
+
+  resizeCanvas();
+  refreshAll();
+  requestAnimationFrame(renderStarMap);
+</script>
+</body>
+</html>
