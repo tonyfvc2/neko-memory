@@ -1,8 +1,8 @@
 {
   "name": "neko-memory",
   "displayName": "猫猫的记忆 · Neko Memory",
-  "version": "1.0.0",
-  "description": "Antigravity 原生长期记忆插件：100% 本地 SQLite 存储、按分类智能半衰期自然淡忘、中文分词按证据召回、平时零上下文占用，内置 2D/3D 交互式可视化记忆星图。",
+  "version": "1.1.0",
+  "description": "Antigravity 原生长期记忆插件：100% 本地 SQLite 存储、按分类智能半衰期自然淡忘、中文分词按证据召回、平时零上下文占用，内置次世代 2D/3D 银河星图与 JSON/CSV/Markdown 导入导出。",
   "logo": "assets/logo.png",
   "suggestedPrompts": [
     "帮我回忆一下我之前记录的偏好和项目约定",

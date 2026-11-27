@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import readline from 'node:readline';
 import { NekoMemoryStore } from '../lib/memory-store.mjs';
 
@@ -60,15 +62,29 @@ const TOOLS = [
   },
   {
     name: 'neko_memory_import_file',
-    description: 'Import bullet points / notes from a local Markdown or text file into long-term memory.',
+    description: 'Import memories from a local JSON, CSV, Markdown, or text file into long-term memory with configurable duplicate handling.',
     inputSchema: {
       type: 'object',
       properties: {
-        file_path: { type: 'string', description: 'Absolute path to a local .md or .txt file.' },
-        category: { type: 'string', description: 'Category for imported memories (default: fact).' },
-        workspace: { type: 'string', description: 'Optional workspace tag.' }
+        file_path: { type: 'string', description: 'Absolute path to a local .json, .csv, .md, or .txt file.' },
+        duplicate_strategy: { type: 'string', enum: ['skip', 'overwrite', 'allow_all'], description: 'How to handle duplicates: skip (default), overwrite, or allow_all.' },
+        category: { type: 'string', description: 'Default category for imported Markdown/text notes (default: fact).' },
+        workspace: { type: 'string', description: 'Optional default workspace tag.' }
       },
       required: ['file_path']
+    }
+  },
+  {
+    name: 'neko_memory_export_file',
+    description: 'Export all local long-term memories to a JSON, CSV, or Markdown backup file on disk.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        output_path: { type: 'string', description: 'Absolute path where the exported file should be written.' },
+        format: { type: 'string', enum: ['json', 'csv', 'markdown'], description: 'Export format (default: json).' },
+        include_archived: { type: 'boolean', description: 'Include archived memories (default: true).' }
+      },
+      required: ['output_path']
     }
   }
 ];
@@ -140,9 +156,32 @@ function handleCallTool(name, args = {}) {
   if (name === 'neko_memory_import_file') {
     const res = store.importMarkdown(args.file_path, {
       category: args.category || 'fact',
-      workspace: args.workspace || ''
+      workspace: args.workspace || '',
+      duplicate_strategy: args.duplicate_strategy || 'skip'
     });
-    return { content: [{ type: 'text', text: `已从 ${res.file} 导入 ${res.imported} 条记忆。` }] };
+    return {
+      content: [{
+        type: 'text',
+        text: `已从 ${res.file} (${res.format.toUpperCase()}) 导入完成：新增 ${res.created} 条，更新 ${res.updated} 条，跳过重复 ${res.skipped} 条。`
+      }]
+    };
+  }
+
+  if (name === 'neko_memory_export_file') {
+    const outPath = String(args.output_path || '').trim();
+    if (!outPath) throw new Error('output_path is required');
+    const exp = store.exportMemories({
+      format: args.format || 'json',
+      include_archived: args.include_archived !== false
+    });
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, exp.content, 'utf8');
+    return {
+      content: [{
+        type: 'text',
+        text: `已导出全部 ${exp.count} 条记忆 (${exp.format.toUpperCase()}) 到：${outPath}`
+      }]
+    };
   }
 
   throw new Error(`Unknown tool: ${name}`);
@@ -170,7 +209,7 @@ rl.on('line', (line) => {
         result: {
           protocolVersion: '2024-11-05',
           capabilities: { tools: {} },
-          serverInfo: { name: 'neko-memory', version: '1.0.0' }
+          serverInfo: { name: 'neko-memory', version: '1.1.0' }
         }
       });
     } else if (method === 'tools/list') {

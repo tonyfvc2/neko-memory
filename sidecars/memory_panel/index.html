@@ -3,839 +3,2651 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>猫猫的记忆 · Neko Memory 星图</title>
+<title>猫猫的记忆 · Neko Memory v1.1</title>
 <style>
   :root, body[data-theme="cosmos"] {
-    --bg: #0b0d17;
-    --panel: #131728;
-    --card: #1a2036;
-    --border: rgba(139, 152, 214, 0.2);
-    --text: #eef0fa;
-    --muted: #939dc0;
-    --accent: #8b5cf6;
-    --accent-2: #38bdf8;
-    --accent-soft: rgba(139, 92, 246, 0.18);
+    --bg: #03060f;
+    --bg-elev: rgba(11, 18, 36, 0.78);
+    --panel: rgba(13, 21, 41, 0.84);
+    --panel-solid: #0d1529;
+    --panel-soft: rgba(18, 28, 54, 0.72);
+    --border: rgba(115, 160, 255, 0.18);
+    --border-strong: rgba(130, 185, 255, 0.34);
+    --text: #eef4ff;
+    --muted: #8ea4c9;
+    --accent: #6da8ff;
+    --accent2: #a78bfa;
+    --primary-btn: linear-gradient(135deg, #2563eb, #3b82f6);
+    --primary-btn-hover: linear-gradient(135deg, #1d4ed8, #2563eb);
+    --danger: #f87171;
     --good: #34d399;
     --warn: #fbbf24;
-    --low: #f472b6;
-    --canvas-bg-1: #070913;
-    --canvas-bg-2: #121631;
-    --star-label: rgba(238, 240, 250, 0.9);
+    --shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+    --glass-blur: blur(18px);
+    --pill-bg: rgba(9, 15, 31, 0.82);
+    --input-bg: rgba(8, 13, 28, 0.88);
+    --is-dark: 1;
+  }
+
+  body[data-theme="glass"] {
+    --bg: #0c1428;
+    --bg-elev: rgba(255, 255, 255, 0.08);
+    --panel: rgba(20, 32, 62, 0.62);
+    --panel-solid: #162344;
+    --panel-soft: rgba(255, 255, 255, 0.09);
+    --border: rgba(255, 255, 255, 0.22);
+    --border-strong: rgba(255, 255, 255, 0.38);
+    --text: #f8fafc;
+    --muted: #b8c9e8;
+    --accent: #38bdf8;
+    --accent2: #c084fc;
+    --primary-btn: linear-gradient(135deg, #0ea5e9, #6366f1);
+    --primary-btn-hover: linear-gradient(135deg, #0284c7, #4f46e5);
+    --danger: #fb7185;
+    --good: #4ade80;
+    --warn: #facc15;
+    --shadow: 0 18px 46px rgba(6, 12, 34, 0.5);
+    --glass-blur: blur(22px);
+    --pill-bg: rgba(15, 25, 52, 0.72);
+    --input-bg: rgba(14, 24, 50, 0.68);
+    --is-dark: 1;
+  }
+
+  body[data-theme="paper"] {
+    --bg: #f6f2e9;
+    --bg-elev: rgba(255, 253, 248, 0.92);
+    --panel: rgba(255, 252, 245, 0.94);
+    --panel-solid: #fffdf8;
+    --panel-soft: rgba(242, 234, 220, 0.85);
+    --border: rgba(139, 108, 72, 0.22);
+    --border-strong: rgba(139, 108, 72, 0.42);
+    --text: #2c221a;
+    --muted: #766452;
+    --accent: #3b6ea5;
+    --accent2: #b45309;
+    --primary-btn: linear-gradient(135deg, #2563eb, #3b82f6);
+    --primary-btn-hover: linear-gradient(135deg, #1d4ed8, #2563eb);
+    --danger: #dc2626;
+    --good: #059669;
+    --warn: #d97706;
+    --shadow: 0 14px 36px rgba(72, 52, 28, 0.14);
+    --glass-blur: blur(14px);
+    --pill-bg: rgba(255, 252, 245, 0.9);
+    --input-bg: rgba(255, 255, 255, 0.96);
+    --is-dark: 0;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
   }
   body[data-theme="glass"] {
-    --bg: #0f172a;
-    --panel: rgba(30, 41, 59, 0.65);
-    --card: rgba(30, 41, 59, 0.55);
-    --border: rgba(148, 163, 184, 0.25);
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --accent: #6366f1;
-    --accent-2: #22d3ee;
-    --accent-soft: rgba(99, 102, 241, 0.2);
-    --canvas-bg-1: #0b1120;
-    --canvas-bg-2: #1e1b4b;
-    --star-label: rgba(241, 245, 249, 0.92);
+    background:
+      radial-gradient(960px 640px at 14% 12%, rgba(56, 189, 248, 0.24), transparent 60%),
+      radial-gradient(840px 580px at 86% 82%, rgba(168, 85, 247, 0.24), transparent 60%),
+      #0c1428;
   }
-  body[data-theme="paper"] {
-    --bg: #f6f1e7;
-    --panel: #fffdf8;
-    --card: #fdf9f0;
-    --border: rgba(120, 97, 72, 0.18);
-    --text: #2c241b;
-    --muted: #786958;
-    --accent: #7c5cff;
-    --accent-2: #0284c7;
-    --accent-soft: rgba(124, 92, 255, 0.12);
-    --canvas-bg-1: #1b1726;
-    --canvas-bg-2: #292138;
-    --star-label: rgba(255, 250, 240, 0.92);
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 14px;
+    background: var(--panel);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 30;
+    flex-wrap: wrap;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
-    background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; transition: background 0.25s, color 0.25s;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
   }
-  .header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-  .title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-  .badge { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
-  .header-right { display: flex; gap: 6px; align-items: center; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
-  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; backdrop-filter: blur(10px); }
-  .stat-val { font-size: 17px; font-weight: 700; color: var(--accent); }
-  .stat-lbl { font-size: 11px; color: var(--muted); }
-  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px; }
-  .tab {
-    background: var(--panel); border: 1px solid var(--border); color: var(--muted);
-    padding: 7px 6px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; text-align: center;
+  .brand-orb {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    background: radial-gradient(circle at 30% 30%, #93c5fd, #6366f1 55%, #312e81);
+    box-shadow: 0 0 18px rgba(99, 102, 241, 0.45);
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    flex-shrink: 0;
   }
-  .tab.active { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
-  .toolbar { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+  .brand-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .ver-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(109, 168, 255, 0.16);
+    border: 1px solid var(--border-strong);
+    color: var(--accent);
+  }
+  .nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 3px;
+  }
+  .nav-tab {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    background: rgba(96, 165, 250, 0.18);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px rgba(125, 180, 255, 0.34);
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .theme-switch {
+    display: flex;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .theme-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .theme-btn.active {
+    background: rgba(109, 168, 255, 0.22);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Generic Controls */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 1px solid var(--border);
+    background: var(--pill-bg);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    border-color: rgba(96, 165, 250, 0.45);
+    background: var(--primary-btn);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28);
+  }
+  .btn-primary:hover { background: var(--primary-btn-hover); }
+  .btn-danger { color: var(--danger); border-color: rgba(248, 113, 113, 0.32); }
+  .btn-danger:hover { background: rgba(248, 113, 113, 0.14); }
+  .btn-pill { border-radius: 999px; }
+  .btn-sm { padding: 4px 9px; font-size: 11px; border-radius: 8px; }
+  .btn.active-toggle {
+    background: rgba(96, 165, 250, 0.22);
+    border-color: rgba(130, 185, 255, 0.55);
+    color: #fff;
+  }
+  body[data-theme="paper"] .btn.active-toggle { color: var(--accent); }
+
   input, select, textarea {
-    background: var(--panel); border: 1px solid var(--border); color: var(--text);
-    border-radius: 8px; padding: 6px 9px; font-size: 12px; outline: none; font-family: inherit;
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 11px;
+    font-size: 12.5px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  .grow { flex: 1; min-width: 110px; }
-  button {
-    background: var(--accent); color: #fff; border: none; border-radius: 8px;
-    padding: 6px 11px; font-size: 12px; font-weight: 600; cursor: pointer;
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(109, 168, 255, 0.14);
   }
-  button.ghost { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
-  button.pill { padding: 3px 8px; font-size: 11px; border-radius: 999px; }
-  button.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  button.danger { background: rgba(244, 114, 182, 0.16); color: var(--low); border: 1px solid rgba(244, 114, 182, 0.35); }
-  button:hover { filter: brightness(1.08); }
+  select option { background: var(--panel-solid); color: var(--text); }
 
-  /* Star Map */
-  .starmap-wrap {
-    position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
-    background: radial-gradient(circle at 50% 45%, var(--canvas-bg-2) 0%, var(--canvas-bg-1) 100%);
-    height: 390px; margin-bottom: 10px; user-select: none;
+  /* Panels Container */
+  .view-panel { display: none; flex: 1; min-height: 0; position: relative; }
+  .view-panel.active { display: flex; flex-direction: column; }
+
+  /* ==================== TAB 1: COSMIC STAR MAP ==================== */
+  .starmap-stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #02050c;
   }
-  #starmap-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
-  #starmap-canvas:active { cursor: grabbing; }
-  .map-hud-top {
-    position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between;
-    align-items: center; gap: 6px; pointer-events: none; flex-wrap: wrap;
+  body[data-theme="glass"] .starmap-stage {
+    background: radial-gradient(circle at 50% 45%, #11224a, #091124 72%);
   }
-  .map-hud-top > * { pointer-events: auto; }
-  .map-controls { display: flex; gap: 4px; background: rgba(11, 13, 23, 0.65); padding: 4px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px); }
-  .map-legend {
-    position: absolute; bottom: 8px; left: 8px; display: flex; gap: 8px; flex-wrap: wrap;
-    background: rgba(11, 13, 23, 0.65); padding: 5px 9px; border-radius: 999px;
-    font-size: 10px; color: #dbe1f7; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+  body[data-theme="paper"] .starmap-stage {
+    background: radial-gradient(circle at 50% 45%, #fdfaf3, #efe7d8 85%);
   }
-  .leg-item { display: inline-flex; align-items: center; gap: 4px; }
-  .leg-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-  .map-hint {
-    position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: rgba(219, 225, 247, 0.72);
-    background: rgba(11, 13, 23, 0.55); padding: 4px 8px; border-radius: 999px; pointer-events: none;
+  #star-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+  }
+  #star-canvas:active { cursor: grabbing; }
+
+  /* Floating Top HUD */
+  .hud-top {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    pointer-events: none;
+    z-index: 12;
+    flex-wrap: wrap;
+  }
+  .hud-top > * { pointer-events: auto; }
+  .hud-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--pill-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 4px 5px 4px 12px;
+    box-shadow: var(--shadow);
+    flex: 1;
+    max-width: 440px;
+    min-width: 210px;
+  }
+  .hud-search-wrap input {
+    border: none;
+    background: transparent;
+    padding: 5px 4px;
+    flex: 1;
+    min-width: 80px;
+    box-shadow: none !important;
+  }
+  .hud-search-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 6px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0b132b;
+    background: linear-gradient(135deg, #93c5fd, #a5b4fc);
+    cursor: pointer;
+    transition: all 0.16s;
+    white-space: nowrap;
+  }
+  .hud-search-btn:hover { filter: brightness(1.08); }
+  .hud-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .hud-pill-group {
+    display: inline-flex;
+    align-items: center;
+    background: var(--pill-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+    box-shadow: var(--shadow);
+  }
+  .hud-pill-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.16s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .hud-pill-btn:hover { color: var(--text); }
+  .hud-pill-btn.active {
+    background: rgba(110, 168, 255, 0.24);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.35);
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
   }
 
-  .inspector {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
-    margin-bottom: 10px;
+  /* Floating Bottom HUD */
+  .hud-bottom-left {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 12;
+    max-width: calc(100% - 240px);
   }
-  .inspector-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 6px; }
-  .neighbor-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .hud-bottom-left > * { pointer-events: auto; }
+  .telemetry-bar {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--pill-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 7px 13px;
+    font-size: 11.5px;
+    color: var(--muted);
+    box-shadow: var(--shadow);
+    width: fit-content;
+  }
+  .telemetry-bar strong { color: var(--text); font-size: 12.5px; margin-left: 3px; }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .legend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--pill-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .legend-chip:hover { color: var(--text); border-color: var(--border-strong); }
+  .legend-chip.active {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(96, 165, 250, 0.2);
+  }
+
+  .hud-bottom-right {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 12;
+  }
+
+  /* Floating Left Node Directory Drawer */
+  .node-drawer {
+    position: absolute;
+    top: 64px;
+    left: 14px;
+    bottom: 92px;
+    width: 270px;
+    max-width: calc(100% - 28px);
+    background: var(--panel);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    display: none;
+    flex-direction: column;
+    z-index: 16;
+    overflow: hidden;
+  }
+  .node-drawer.open { display: flex; }
+  .drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 9px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    background: var(--panel-soft);
+    cursor: pointer;
+    transition: all 0.14s;
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+  .drawer-item:hover { border-color: var(--border-strong); }
+  .drawer-item.selected { border-color: var(--accent); background: rgba(96, 165, 250, 0.16); }
+
+  /* Floating Right Star Inspector */
+  .star-inspector {
+    position: absolute;
+    top: 64px;
+    right: 14px;
+    bottom: 62px;
+    width: 318px;
+    max-width: calc(100% - 28px);
+    background: var(--panel);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    display: none;
+    flex-direction: column;
+    z-index: 18;
+    overflow: hidden;
+  }
+  .star-inspector.open { display: flex; }
+  .insp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .insp-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .insp-content {
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 10px 12px;
+  }
+  .fresh-track {
+    height: 6px;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .fresh-fill { height: 100%; border-radius: 999px; transition: width 0.3s; }
   .neighbor-chip {
-    font-size: 11px; padding: 3px 8px; border-radius: 8px; background: var(--accent-soft); color: var(--text);
-    border: 1px solid var(--border); cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 11.5px;
+    transition: all 0.14s;
   }
   .neighbor-chip:hover { border-color: var(--accent); }
 
-  .form-box {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
-    padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;
+  /* ==================== TAB 2: MEMORY MANAGEMENT & IMPORT/EXPORT ==================== */
+  .scroll-view {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
-  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-  .list { display: flex; flex-direction: column; gap: 8px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
-  .card.archived { opacity: 0.6; }
-  .card-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: var(--muted); }
-  .cat { padding: 1px 7px; border-radius: 6px; font-weight: 600; color: #fff; font-size: 11px; }
-  .card-content { font-size: 13px; white-space: pre-wrap; word-break: break-word; margin-bottom: 8px; }
-  .fresh-bar { height: 4px; background: rgba(148,163,184,0.18); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
-  .fresh-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
-  .card-actions { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); flex-wrap: wrap; gap: 6px; }
-  .card-btns { display: flex; gap: 5px; flex-wrap: wrap; }
-  .card-btns button { padding: 3px 8px; font-size: 11px; }
-  .empty { text-align: center; color: var(--muted); padding: 24px 12px; background: var(--panel); border-radius: 10px; border: 1px dashed var(--border); }
-  .toast { position: fixed; bottom: 14px; right: 14px; background: #1e2236; color: #fff; border: 1px solid var(--accent); padding: 8px 14px; border-radius: 8px; font-size: 12px; display: none; z-index: 99; }
+  .section-card {
+    background: var(--panel);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-grid-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .filter-grid-mid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .filter-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+  }
+  @media (max-width: 680px) {
+    .filter-grid-top, .filter-grid-mid, .filter-actions, .io-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .hud-bottom-left { max-width: calc(100% - 28px); bottom: 58px; }
+  }
+
+  /* Import / Export Cards (Image 3 style) */
+  .io-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .io-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 14px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.16s, background 0.16s;
+  }
+  .io-box.dragover {
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.12);
+  }
+  .io-box h4 { margin: 0; font-size: 13.5px; font-weight: 700; }
+  .io-desc { margin: 0; font-size: 12px; color: var(--muted); }
+  .io-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .io-controls select { min-width: 112px; padding: 7px 10px; }
+
+  /* Memory List Cards */
+  .mem-list { display: flex; flex-direction: column; gap: 10px; }
+  .mem-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.15s;
+  }
+  .mem-card:hover { border-color: var(--border-strong); }
+  .mem-card.archived { opacity: 0.62; }
+  .mem-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .mem-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--panel-soft);
+  }
+  .mem-content {
+    font-size: 13px;
+    line-height: 1.62;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .mem-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Modal (Import Preview & Memory Edit) */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 18, 0.72);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 16px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal-card {
+    width: 100%;
+    max-width: 720px;
+    max-height: 86vh;
+    background: var(--panel-solid);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-head {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .modal-head h3 { margin: 0; font-size: 15px; }
+  .modal-body {
+    padding: 14px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .preview-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .preview-table th, .preview-table td {
+    text-align: left;
+    padding: 8px 9px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .preview-table th { color: var(--muted); font-weight: 600; font-size: 11px; }
+  .act-create { color: #34d399; border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.12); }
+  .act-overwrite { color: #fbbf24; border-color: rgba(251, 191, 36, 0.38); background: rgba(251, 191, 36, 0.12); }
+  .act-skip { color: var(--muted); }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(15, 23, 42, 0.94);
+    color: #f8fafc;
+    border: 1px solid rgba(147, 197, 253, 0.4);
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 500;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.22s ease;
+    z-index: 90;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .empty-state {
+    text-align: center;
+    padding: 36px 16px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .row-flex { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .spacer { flex: 1; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.28); border-radius: 999px; }
 </style>
 </head>
 <body data-theme="cosmos">
-  <div class="header">
-    <div class="title">🐾 猫猫的记忆 <span class="badge">记忆星图 v1.0</span></div>
+  <header>
+    <div class="brand">
+      <div class="brand-orb">🐾</div>
+      <div class="brand-title">猫猫的记忆 <span class="ver-badge">v1.1</span></div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-map" onclick="switchTab('map')">🌌 记忆星图</button>
+      <button class="nav-tab" id="tab-list" onclick="switchTab('list')">📚 记忆管理</button>
+      <button class="nav-tab" id="tab-recall" onclick="switchTab('recall')">🔍 召回测试</button>
+      <button class="nav-tab" id="tab-logs" onclick="switchTab('logs')">🕒 召回记录</button>
+    </div>
+
     <div class="header-right">
-      <select id="theme-sel" onchange="setTheme(this.value)" title="切换外观主题">
-        <option value="cosmos">🌌 深空星图</option>
-        <option value="glass">🫧 液态玻璃</option>
-        <option value="paper">📜 暖光书页</option>
-      </select>
-      <button class="ghost" onclick="refreshAll()">刷新</button>
+      <div class="theme-switch" title="切换主题">
+        <button class="theme-btn active" id="th-cosmos" onclick="setTheme('cosmos')">深空</button>
+        <button class="theme-btn" id="th-glass" onclick="setTheme('glass')">玻璃</button>
+        <button class="theme-btn" id="th-paper" onclick="setTheme('paper')">书页</button>
+      </div>
+      <button class="btn btn-sm btn-pill" onclick="refreshAll()" title="刷新数据">🔄</button>
     </div>
-  </div>
+  </header>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-val" id="st-active">-</div><div class="stat-lbl">活跃星辰</div></div>
-    <div class="stat"><div class="stat-val" id="st-recalls">-</div><div class="stat-lbl">累计召回</div></div>
-    <div class="stat"><div class="stat-val" id="st-archived">-</div><div class="stat-lbl">星尘归档</div></div>
-  </div>
+  <!-- ==================== VIEW 1: STAR MAP ==================== -->
+  <section class="view-panel active" id="view-map">
+    <div class="starmap-stage" id="starmap-stage">
+      <canvas id="star-canvas"></canvas>
 
-  <div class="tabs">
-    <button class="tab active" id="tab-map" onclick="switchTab('map')">✨ 记忆星图</button>
-    <button class="tab" id="tab-list" onclick="switchTab('list')">📚 记忆库</button>
-    <button class="tab" id="tab-recall" onclick="switchTab('recall')">🔍 召回测试</button>
-    <button class="tab" id="tab-logs" onclick="switchTab('logs')">🕒 召回记录</button>
-  </div>
-
-  <!-- TAB 1: MEMORY STAR MAP -->
-  <div id="view-map">
-    <div class="starmap-wrap">
-      <canvas id="starmap-canvas"></canvas>
-      <div class="map-hud-top">
-        <div class="map-controls">
-          <button class="ghost pill active" id="btn-2d" onclick="setMapMode('2d')">2D 星座</button>
-          <button class="ghost pill" id="btn-3d" onclick="setMapMode('3d')">3D 星空</button>
-          <button class="ghost pill" onclick="resetCamera()">居中复位</button>
-          <button class="ghost pill" id="btn-spin" onclick="toggleAutoSpin()">公转: 开</button>
+      <!-- Top Floating HUD -->
+      <div class="hud-top">
+        <div class="hud-search-wrap">
+          <input id="map-search-input" type="text" placeholder="搜索记忆星辰、标签或关键字..." onkeydown="if(event.key==='Enter')searchStarMap();if(event.key==='Escape')clearMapSearch();" />
+          <button class="btn btn-sm" id="map-search-clear" style="display:none;border:none;background:transparent;padding:2px 6px;" onclick="clearMapSearch()">✕</button>
+          <button class="hud-search-btn" onclick="searchStarMap()">🔍 检索图谱</button>
         </div>
-        <select id="map-cat" onchange="loadGraph()" style="background:rgba(11,13,23,0.72);color:#eef0fa;border-color:rgba(255,255,255,0.16);">
-          <option value="">全部星座</option>
-          <option value="preference">偏好 (365天)</option>
-          <option value="project">项目 (60天)</option>
-          <option value="decision">决策 (90天)</option>
-          <option value="pitfall">踩坑 (90天)</option>
-          <option value="fact">事实 (30天)</option>
-          <option value="handoff">交接 (14天)</option>
-        </select>
-      </div>
-      <div class="map-legend">
-        <span class="leg-item"><i class="leg-dot" style="background:#a855f7"></i>偏好</span>
-        <span class="leg-item"><i class="leg-dot" style="background:#38bdf8"></i>项目</span>
-        <span class="leg-item"><i class="leg-dot" style="background:#fbbf24"></i>决策</span>
-        <span class="leg-item"><i class="leg-dot" style="background:#f472b6"></i>踩坑</span>
-        <span class="leg-item"><i class="leg-dot" style="background:#818cf8"></i>事实</span>
-        <span class="leg-item"><i class="leg-dot" style="background:#34d399"></i>交接</span>
-      </div>
-      <div class="map-hint" id="map-hint">拖拽画布 · 滚轮缩放 · 点击星辰查看关联</div>
-    </div>
 
-    <div class="inspector" id="star-inspector">
-      <div class="inspector-empty">✨ 点击上方任意一颗记忆星辰，查看完整内容、鲜活度与相连的星座记忆~</div>
-    </div>
-  </div>
-
-  <!-- TAB 2: MEMORY LIST -->
-  <div id="view-list" style="display:none;">
-    <div class="form-box">
-      <textarea id="new-content" rows="2" placeholder="写下想让猫猫记住的事（偏好、项目路径、约定、踩坑记录...）"></textarea>
-      <div class="row">
-        <select id="new-cat" onchange="onCatChange()">
-          <option value="preference" selected>偏好 (默认 365天)</option>
-          <option value="project">项目 (默认 60天)</option>
-          <option value="decision">决策 (默认 90天)</option>
-          <option value="pitfall">踩坑 (默认 90天)</option>
-          <option value="fact">事实 (默认 30天)</option>
-          <option value="handoff">交接 (默认 14天)</option>
-        </select>
-        <select id="new-imp">
-          <option value="5" selected>重要度 5 (核心)</option>
-          <option value="4">重要度 4 (高)</option>
-          <option value="3">重要度 3 (中)</option>
-          <option value="2">重要度 2 (低)</option>
-        </select>
-        <input id="new-hl" type="number" value="365" min="1" max="3650" style="width:74px" title="半衰期（天）" />
-        <button class="ghost pill" type="button" onclick="setHl(180)">180天</button>
-        <button class="ghost pill" type="button" onclick="setHl(365)">365天</button>
-      </div>
-      <div class="row">
-        <input id="new-tags" class="grow" placeholder="标签（逗号分隔，星图会自动连线相同标签）" />
-        <button onclick="addMemory()">✨ 写入星图</button>
-      </div>
-    </div>
-
-    <div class="toolbar">
-      <input id="filter-q" class="grow" placeholder="筛选记忆内容 / 标签..." oninput="loadList()" />
-      <select id="filter-cat" onchange="loadList()">
-        <option value="">全部分类</option>
-        <option value="preference">偏好</option>
-        <option value="project">项目</option>
-        <option value="decision">决策</option>
-        <option value="pitfall">踩坑</option>
-        <option value="fact">事实</option>
-        <option value="handoff">交接</option>
-      </select>
-      <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);">
-        <input type="checkbox" id="filter-arch" onchange="loadList()" /> 含归档
-      </label>
-    </div>
-    <div id="memory-list" class="list"></div>
-  </div>
-
-  <!-- TAB 3: RECALL TEST -->
-  <div id="view-recall" style="display:none;">
-    <div class="toolbar">
-      <input id="recall-q" class="grow" placeholder="输入一句话，测试猫猫会按证据召回哪些记忆..." onkeydown="if(event.key==='Enter') runRecall()" />
-      <button onclick="runRecall()">测试召回</button>
-    </div>
-    <div id="recall-results" class="list">
-      <div class="empty">输入关键词或问题，查看中文分词命中证据、鲜活度与综合得分。</div>
-    </div>
-  </div>
-
-  <!-- TAB 4: RECALL LOGS -->
-  <div id="view-logs" style="display:none;">
-    <div id="logs-list" class="list"></div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-<script>
-  const CAT_META = {
-    preference: { label: '偏好', color: '#a855f7', hl: 365 },
-    project:    { label: '项目', color: '#38bdf8', hl: 60  },
-    decision:   { label: '决策', color: '#fbbf24', hl: 90  },
-    pitfall:    { label: '踩坑', color: '#f472b6', hl: 90  },
-    fact:       { label: '事实', color: '#818cf8', hl: 30  },
-    handoff:    { label: '交接', color: '#34d399', hl: 14  }
-  };
-
-  let currentTab = 'map';
-  let mapMode = '2d';
-  let autoSpin = true;
-  let graphData = { nodes: [], edges: [] };
-  let simNodes = [];
-  let selectedId = null;
-  let hoveredId = null;
-
-  // Camera state
-  let cam = { x: 0, y: 0, zoom: 1, rotY: 0.4, rotX: 0.22 };
-  let dragState = { down: false, moved: false, startX: 0, startY: 0, camX: 0, camY: 0, rotY: 0, rotX: 0, dragNode: null };
-
-  // Background ambient stars
-  const bgStars = Array.from({ length: 85 }, () => ({
-    x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 1.4, phase: Math.random() * Math.PI * 2
-  }));
-
-  function setTheme(t) {
-    document.body.setAttribute('data-theme', t);
-    try { localStorage.setItem('neko_mem_theme', t); } catch {}
-  }
-  try {
-    const saved = localStorage.getItem('neko_mem_theme');
-    if (saved) { document.getElementById('theme-sel').value = saved; setTheme(saved); }
-  } catch {}
-
-  function onCatChange() {
-    const cat = document.getElementById('new-cat').value;
-    document.getElementById('new-hl').value = (CAT_META[cat] || CAT_META.fact).hl;
-    if (cat === 'preference') document.getElementById('new-imp').value = '5';
-  }
-  function setHl(days) { document.getElementById('new-hl').value = days; }
-
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg; el.style.display = 'block';
-    clearTimeout(window._tt);
-    window._tt = setTimeout(() => { el.style.display = 'none'; }, 2200);
-  }
-  function esc(s) {
-    return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-  }
-  function freshColor(pct) {
-    if (pct >= 60) return 'var(--good)';
-    if (pct >= 30) return 'var(--warn)';
-    return 'var(--low)';
-  }
-  async function api(url, opts) {
-    const r = await fetch(url, opts);
-    return r.json();
-  }
-
-  function switchTab(t) {
-    currentTab = t;
-    ['map', 'list', 'recall', 'logs'].forEach(k => {
-      document.getElementById('tab-' + k).classList.toggle('active', k === t);
-      document.getElementById('view-' + k).style.display = k === t ? '' : 'none';
-    });
-    if (t === 'map') { resizeCanvas(); loadGraph(); }
-    if (t === 'list') loadList();
-    if (t === 'logs') loadLogs();
-  }
-
-  async function loadStats() {
-    const s = await api('./api/stats');
-    document.getElementById('st-active').textContent = s.active_count ?? 0;
-    document.getElementById('st-recalls').textContent = s.total_recalls ?? 0;
-    document.getElementById('st-archived').textContent = s.archived_count ?? 0;
-  }
-
-  // ===== STAR MAP ENGINE =====
-  const canvas = document.getElementById('starmap-canvas');
-  const ctx = canvas.getContext('2d');
-
-  function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.max(300, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(260, Math.floor(rect.height * dpr));
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  window.addEventListener('resize', resizeCanvas);
-
-  function setMapMode(m) {
-    mapMode = m;
-    document.getElementById('btn-2d').classList.toggle('active', m === '2d');
-    document.getElementById('btn-3d').classList.toggle('active', m === '3d');
-    document.getElementById('map-hint').textContent = m === '3d'
-      ? '拖拽 360° 旋转星空 · 滚轮缩放 · 点击星辰查看关联'
-      : '拖拽画布或星辰 · 滚轮缩放 · 点击星辰查看关联';
-    resetCamera();
-  }
-
-  function toggleAutoSpin() {
-    autoSpin = !autoSpin;
-    document.getElementById('btn-spin').textContent = autoSpin ? '公转: 开' : '公转: 关';
-  }
-
-  function resetCamera() {
-    cam = { x: 0, y: 0, zoom: 1, rotY: 0.4, rotX: 0.22 };
-  }
-
-  function layoutNodes(nodes) {
-    const n = nodes.length;
-    const prevMap = new Map(simNodes.map(s => [s.id, s]));
-    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-    simNodes = nodes.map((node, i) => {
-      const prev = prevMap.get(node.id);
-      // 3D Fibonacci sphere coordinates
-      const y3 = n <= 1 ? 0 : 1 - (i / Math.max(1, n - 1)) * 2;
-      const rad3 = Math.sqrt(Math.max(0, 1 - y3 * y3));
-      const theta3 = goldenAngle * i;
-      const R3 = 125;
-
-      // 2D initial spiral layout
-      const angle2 = i * 2.39996;
-      const dist2 = n <= 1 ? 0 : 42 + Math.sqrt(i + 1) * 44;
-      return {
-        ...node,
-        x: prev ? prev.x : Math.cos(angle2) * dist2,
-        y: prev ? prev.y : Math.sin(angle2) * dist2,
-        vx: 0, vy: 0,
-        sx3: Math.cos(theta3) * rad3 * R3,
-        sy3: y3 * R3,
-        sz3: Math.sin(theta3) * rad3 * R3,
-        baseRadius: 5.5 + (node.importance || 3) * 1.6 + Math.min(5, (node.recall_count || 0) * 0.6),
-        screenX: 0, screenY: 0, screenR: 8, depth: 1
-      };
-    });
-  }
-
-  function stepForce2D() {
-    const N = simNodes.length;
-    if (N <= 1) return;
-    const nodeMap = new Map(simNodes.map(n => [n.id, n]));
-    // Gentle repulsion + center gravity
-    for (let i = 0; i < N; i++) {
-      const a = simNodes[i];
-      if (dragState.dragNode === a) continue;
-      a.vx -= a.x * 0.0022;
-      a.vy -= a.y * 0.0022;
-      for (let j = i + 1; j < N; j++) {
-        const b = simNodes[j];
-        let dx = a.x - b.x, dy = a.y - b.y;
-        let d2 = dx * dx + dy * dy + 0.01;
-        if (d2 < 24000) {
-          const f = 320 / d2;
-          const d = Math.sqrt(d2);
-          const fx = (dx / d) * f, fy = (dy / d) * f;
-          a.vx += fx; a.vy += fy;
-          if (dragState.dragNode !== b) { b.vx -= fx; b.vy -= fy; }
-        }
-      }
-    }
-    // Spring attraction along edges
-    for (const e of graphData.edges) {
-      const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
-      if (!a || !b) continue;
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.sqrt(dx * dx + dy * dy) || 1;
-      const targetDist = 115 - e.weight * 35;
-      const pull = (d - targetDist) * 0.006 * (0.4 + e.weight);
-      const fx = (dx / d) * pull, fy = (dy / d) * pull;
-      if (dragState.dragNode !== a) { a.vx += fx; a.vy += fy; }
-      if (dragState.dragNode !== b) { b.vx -= fx; b.vy -= fy; }
-    }
-    for (const a of simNodes) {
-      if (dragState.dragNode === a) continue;
-      a.vx *= 0.86; a.vy *= 0.86;
-      a.x += Math.max(-6, Math.min(6, a.vx));
-      a.y += Math.max(-6, Math.min(6, a.vy));
-    }
-  }
-
-  function renderStarMap(ts) {
-    if (currentTab === 'map') {
-      const w = canvas.clientWidth || 400;
-      const h = canvas.clientHeight || 390;
-      ctx.clearRect(0, 0, w, h);
-
-      // Ambient twinkling background stars
-      for (const s of bgStars) {
-        const alpha = 0.2 + 0.45 * (0.5 + 0.5 * Math.sin(ts * 0.0015 + s.phase));
-        ctx.fillStyle = `rgba(210, 222, 255, ${alpha.toFixed(2)})`;
-        ctx.beginPath();
-        ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      if (simNodes.length === 0) {
-        ctx.fillStyle = 'rgba(200, 210, 240, 0.7)';
-        ctx.font = '13px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('星图暂无记忆，去「记忆库」写入第一颗星辰吧 ✨', w / 2, h / 2);
-      } else {
-        if (mapMode === '2d') {
-          stepForce2D();
-          for (const n of simNodes) {
-            n.screenX = w / 2 + (n.x + cam.x) * cam.zoom;
-            n.screenY = h / 2 + (n.y + cam.y) * cam.zoom;
-            n.screenR = n.baseRadius * Math.max(0.65, Math.min(1.6, cam.zoom));
-            n.depth = 1;
-          }
-        } else {
-          if (autoSpin && !dragState.down) cam.rotY += 0.0035;
-          const cosY = Math.cos(cam.rotY), sinY = Math.sin(cam.rotY);
-          const cosX = Math.cos(cam.rotX), sinX = Math.sin(cam.rotX);
-          for (const n of simNodes) {
-            const x1 = n.sx3 * cosY - n.sz3 * sinY;
-            const z1 = n.sx3 * sinY + n.sz3 * cosY;
-            const y2 = n.sy3 * cosX - z1 * sinX;
-            const z2 = n.sy3 * sinX + z1 * cosX;
-            const fov = 360;
-            const scale = (fov / (fov + z2 + 160)) * cam.zoom;
-            n.screenX = w / 2 + x1 * scale;
-            n.screenY = h / 2 + y2 * scale;
-            n.screenR = Math.max(3.5, n.baseRadius * scale * 1.15);
-            n.depth = scale;
-          }
-        }
-
-        const focusId = hoveredId ?? selectedId;
-        const neighborSet = new Set();
-        if (focusId !== null) {
-          neighborSet.add(focusId);
-          for (const e of graphData.edges) {
-            if (e.source === focusId) neighborSet.add(e.target);
-            if (e.target === focusId) neighborSet.add(e.source);
-          }
-        }
-        const nodeMap = new Map(simNodes.map(n => [n.id, n]));
-
-        // Draw constellation edges
-        for (const e of graphData.edges) {
-          const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
-          if (!a || !b) continue;
-          const isLit = focusId !== null && (e.source === focusId || e.target === focusId);
-          const dim = focusId !== null && !isLit;
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(a.screenX, a.screenY);
-          ctx.lineTo(b.screenX, b.screenY);
-          ctx.strokeStyle = isLit
-            ? `rgba(167, 139, 250, ${0.55 + e.weight * 0.4})`
-            : `rgba(148, 163, 224, ${dim ? 0.06 : (0.16 + e.weight * 0.28)})`;
-          ctx.lineWidth = isLit ? (1.4 + e.weight * 1.8) : (0.8 + e.weight * 1.1);
-          ctx.stroke();
-
-          if (isLit && e.reason) {
-            const mx = (a.screenX + b.screenX) / 2;
-            const my = (a.screenY + b.screenY) / 2;
-            ctx.font = '10px sans-serif';
-            ctx.fillStyle = 'rgba(224, 212, 255, 0.92)';
-            ctx.textAlign = 'center';
-            ctx.fillText(e.reason, mx, my - 4);
-          }
-          ctx.restore();
-        }
-
-        // Sort by depth so nearer stars render on top in 3D
-        const drawOrder = [...simNodes].sort((a, b) => a.depth - b.depth);
-        for (const n of drawOrder) {
-          const meta = CAT_META[n.category] || CAT_META.fact;
-          const isSel = n.id === selectedId;
-          const isHov = n.id === hoveredId;
-          const dim = focusId !== null && !neighborSet.has(n.id);
-          const freshAlpha = Math.max(0.28, Math.min(1, n.freshness || 0.8));
-          const alpha = dim ? 0.22 : freshAlpha * (mapMode === '3d' ? Math.max(0.35, Math.min(1, n.depth * 1.1)) : 1);
-
-          // Outer glow halo
-          const pulse = 1 + 0.08 * Math.sin(ts * 0.003 + n.id);
-          const haloR = n.screenR * (isSel || isHov ? 3.2 : 2.3) * pulse;
-          const grad = ctx.createRadialGradient(n.screenX, n.screenY, 0, n.screenX, n.screenY, haloR);
-          grad.addColorStop(0, meta.color + (dim ? '22' : '88'));
-          grad.addColorStop(1, meta.color + '00');
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(n.screenX, n.screenY, haloR, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Star core
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = meta.color;
-          ctx.beginPath();
-          ctx.arc(n.screenX, n.screenY, n.screenR, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Bright center pinpoint
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(n.screenX, n.screenY, Math.max(1.8, n.screenR * 0.38), 0, Math.PI * 2);
-          ctx.fill();
-
-          if (isSel || isHov) {
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1.6;
-            ctx.beginPath();
-            ctx.arc(n.screenX, n.screenY, n.screenR + 3.5, 0, Math.PI * 2);
-            ctx.stroke();
-          }
-
-          // Label
-          if (!dim || isSel || isHov) {
-            ctx.font = (isSel || isHov ? '600 11px ' : '10px ') + '-apple-system, "Microsoft YaHei", sans-serif';
-            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--star-label') || '#eef0fa';
-            ctx.textAlign = 'center';
-            ctx.fillText(n.label, n.screenX, n.screenY + n.screenR + 13);
-          }
-          ctx.restore();
-        }
-      }
-    }
-    requestAnimationFrame(renderStarMap);
-  }
-
-  function pickNode(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left, y = clientY - rect.top;
-    let best = null, bestDist = 9999;
-    for (const n of simNodes) {
-      const d = Math.hypot(n.screenX - x, n.screenY - y);
-      const hitR = Math.max(14, n.screenR + 6);
-      if (d <= hitR && d < bestDist) { best = n; bestDist = d; }
-    }
-    return best;
-  }
-
-  canvas.addEventListener('mousedown', (e) => {
-    const hit = pickNode(e.clientX, e.clientY);
-    dragState = {
-      down: true, moved: false, startX: e.clientX, startY: e.clientY,
-      camX: cam.x, camY: cam.y, rotY: cam.rotY, rotX: cam.rotX,
-      dragNode: mapMode === '2d' ? hit : null
-    };
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!dragState.down) {
-      const hit = pickNode(e.clientX, e.clientY);
-      hoveredId = hit ? hit.id : null;
-      canvas.style.cursor = hit ? 'pointer' : 'grab';
-      return;
-    }
-    const dx = e.clientX - dragState.startX, dy = e.clientY - dragState.startY;
-    if (Math.hypot(dx, dy) > 4) dragState.moved = true;
-    if (mapMode === '2d') {
-      if (dragState.dragNode) {
-        dragState.dragNode.x += dx / cam.zoom;
-        dragState.dragNode.y += dy / cam.zoom;
-        dragState.startX = e.clientX;
-        dragState.startY = e.clientY;
-      } else {
-        cam.x = dragState.camX + dx / cam.zoom;
-        cam.y = dragState.camY + dy / cam.zoom;
-      }
-    } else {
-      cam.rotY = dragState.rotY + dx * 0.008;
-      cam.rotX = Math.max(-1.3, Math.min(1.3, dragState.rotX + dy * 0.008));
-    }
-  });
-  window.addEventListener('mouseup', (e) => {
-    if (!dragState.down) return;
-    const wasClick = !dragState.moved;
-    dragState.down = false;
-    dragState.dragNode = null;
-    if (wasClick) {
-      const hit = pickNode(e.clientX, e.clientY);
-      if (hit) selectStar(hit.id);
-      else { selectedId = null; renderInspector(); }
-    }
-  });
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const factor = e.deltaY < 0 ? 1.12 : 0.89;
-    cam.zoom = Math.max(0.45, Math.min(2.8, cam.zoom * factor));
-  }, { passive: false });
-
-  function selectStar(id) {
-    selectedId = id;
-    const n = simNodes.find(s => s.id === id);
-    if (n && mapMode === '2d') {
-      cam.x = -n.x; cam.y = -n.y;
-    }
-    renderInspector();
-  }
-
-  function renderInspector() {
-    const el = document.getElementById('star-inspector');
-    if (selectedId === null) {
-      el.innerHTML = '<div class="inspector-empty">✨ 点击上方任意一颗记忆星辰，查看完整内容、鲜活度与相连的星座记忆~</div>';
-      return;
-    }
-    const m = simNodes.find(s => s.id === selectedId);
-    if (!m) { selectedId = null; renderInspector(); return; }
-    const meta = CAT_META[m.category] || CAT_META.fact;
-    const neighbors = [];
-    for (const e of graphData.edges) {
-      if (e.source === m.id) {
-        const t = simNodes.find(s => s.id === e.target);
-        if (t) neighbors.push({ node: t, reason: e.reason });
-      } else if (e.target === m.id) {
-        const s = simNodes.find(s => s.id === e.source);
-        if (s) neighbors.push({ node: s, reason: e.reason });
-      }
-    }
-    el.innerHTML = `
-      <div class="card-top">
-        <div><span class="cat" style="background:${meta.color}">${esc(meta.label)}</span> #${m.id} · 重要度 ${m.importance}/5 · 半衰期 <b>${m.half_life_days}天</b></div>
-        <div>${esc(m.time_label)}</div>
-      </div>
-      <div class="card-content">${esc(m.content)}</div>
-      <div class="fresh-bar"><div class="fresh-fill" style="width:${m.freshness_pct}%;background:${freshColor(m.freshness_pct)}"></div></div>
-      <div class="card-actions">
-        <div>鲜活度 ${m.freshness_pct}% · 召回 ${m.recall_count} 次${m.tags ? ' · 🏷 ' + esc(m.tags) : ''}</div>
-        <div class="card-btns">
-          <button class="ghost" onclick="updateHalfLife(${m.id}, 180)">设为 180天</button>
-          <button class="ghost" onclick="updateHalfLife(${m.id}, 365)">设为 365天</button>
-          <button class="danger" onclick="toggleArchive(${m.id}, true)">归档</button>
-        </div>
-      </div>
-      ${neighbors.length > 0 ? `
-        <div style="margin-top:8px;font-size:11px;color:var(--muted);">🔗 关联星辰（点击聚焦跳转）：</div>
-        <div class="neighbor-list">
-          ${neighbors.map(nb => `<span class="neighbor-chip" onclick="selectStar(${nb.node.id})" title="${esc(nb.reason)}">✦ #${nb.node.id} ${esc(nb.node.label)}</span>`).join('')}
-        </div>` : ''}
-    `;
-  }
-
-  async function loadGraph() {
-    const cat = encodeURIComponent(document.getElementById('map-cat').value);
-    const data = await api(`./api/graph?category=${cat}`);
-    graphData = { nodes: data.nodes || [], edges: data.edges || [] };
-    layoutNodes(graphData.nodes);
-    if (selectedId !== null && !simNodes.some(s => s.id === selectedId)) selectedId = null;
-    renderInspector();
-  }
-
-  // ===== LIST & CRUD =====
-  function renderCard(m, extraHtml = '') {
-    const meta = CAT_META[m.category] || CAT_META.fact;
-    return `
-      <div class="card ${m.archived ? 'archived' : ''}">
-        <div class="card-top">
-          <div><span class="cat" style="background:${meta.color}">${esc(meta.label)}</span> #${m.id} · 重要度 ${m.importance}/5 · 半衰期 ${m.half_life_days}天</div>
-          <div>${esc(m.time_label)}</div>
-        </div>
-        <div class="card-content">${esc(m.content)}</div>
-        <div class="fresh-bar"><div class="fresh-fill" style="width:${m.freshness_pct}%;background:${freshColor(m.freshness_pct)}"></div></div>
-        <div class="card-actions">
-          <div>鲜活度 ${m.freshness_pct}% · 召回 ${m.recall_count} 次${m.tags ? ' · 🏷 ' + esc(m.tags) : ''}${extraHtml}</div>
-          <div class="card-btns">
-            ${!m.archived ? `<button class="ghost" onclick="focusInMap(${m.id})">星图定位</button>` : ''}
-            ${m.archived
-              ? `<button class="ghost" onclick="toggleArchive(${m.id}, false)">恢复</button><button class="danger" onclick="hardDelete(${m.id})">彻底删除</button>`
-              : `<button class="ghost" onclick="toggleArchive(${m.id}, true)">归档</button>`}
+        <div class="hud-top-actions">
+          <div class="hud-pill-group">
+            <button class="hud-pill-btn active" id="btn-mode-3d" onclick="setMapMode('3d')">3D</button>
+            <button class="hud-pill-btn" id="btn-mode-2d" onclick="setMapMode('2d')">2D</button>
+          </div>
+          <div class="hud-pill-group">
+            <button class="hud-pill-btn" onclick="resetCamera()">🎯 重置视角</button>
+            <button class="hud-pill-btn" id="btn-node-drawer" onclick="toggleNodeDrawer()">☰ 节点列表</button>
           </div>
         </div>
-      </div>`;
-  }
+      </div>
 
-  function focusInMap(id) {
-    switchTab('map');
-    setTimeout(() => selectStar(id), 150);
-  }
-
-  async function loadList() {
-    const q = encodeURIComponent(document.getElementById('filter-q').value.trim());
-    const cat = encodeURIComponent(document.getElementById('filter-cat').value);
-    const arch = document.getElementById('filter-arch').checked ? '1' : '0';
-    const data = await api(`./api/memories?search=${q}&category=${cat}&include_archived=${arch}`);
-    const el = document.getElementById('memory-list');
-    if (!data.items || data.items.length === 0) {
-      el.innerHTML = '<div class="empty">还没有记住任何事喵~ 在上面写一条，或者聊天时告诉猫猫「记住这个」吧！</div>';
-      return;
-    }
-    el.innerHTML = data.items.map(m => renderCard(m)).join('');
-  }
-
-  async function addMemory() {
-    const content = document.getElementById('new-content').value.trim();
-    if (!content) return toast('请先输入记忆内容');
-    const body = {
-      content,
-      category: document.getElementById('new-cat').value,
-      importance: Number(document.getElementById('new-imp').value),
-      half_life_days: Number(document.getElementById('new-hl').value) || undefined,
-      tags: document.getElementById('new-tags').value.trim()
-    };
-    await api('./api/memories', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    document.getElementById('new-content').value = '';
-    document.getElementById('new-tags').value = '';
-    toast('已点亮一颗新的记忆星辰 ✨');
-    refreshAll();
-  }
-
-  async function updateHalfLife(id, days) {
-    await api('./api/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, half_life_days: days }) });
-    toast(`已将记忆 #${id} 的半衰期设为 ${days} 天`);
-    await refreshAll();
-  }
-
-  async function toggleArchive(id, archived) {
-    await api('./api/archive', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, archived }) });
-    toast(archived ? '已归档（可随时恢复）' : '已恢复记忆');
-    if (archived && selectedId === id) selectedId = null;
-    refreshAll();
-  }
-
-  async function hardDelete(id) {
-    await api('./api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
-    toast('已彻底删除');
-    refreshAll();
-  }
-
-  async function runRecall() {
-    const query = document.getElementById('recall-q').value.trim();
-    if (!query) return;
-    const data = await api('./api/recall', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, limit: 8 }) });
-    const el = document.getElementById('recall-results');
-    if (!data.items || data.items.length === 0) {
-      el.innerHTML = '<div class="empty">没有命中足够证据的记忆（平时不占上下文~）</div>';
-      return;
-    }
-    el.innerHTML = data.items.map(m => renderCard(m, ` · 得分 ${m.score} · 命中: ${(m.matched_terms || []).join(', ')}`)).join('');
-  }
-
-  async function loadLogs() {
-    const data = await api('./api/logs');
-    const el = document.getElementById('logs-list');
-    if (!data.items || data.items.length === 0) {
-      el.innerHTML = '<div class="empty">还没有召回记录。</div>';
-      return;
-    }
-    el.innerHTML = data.items.map(l => `
-      <div class="card">
-        <div class="card-top">
-          <div>命中星辰 #${l.memory_id} · 得分 ${l.score}</div>
-          <div>${esc(l.time_label)}</div>
+      <!-- Left Node Directory Drawer -->
+      <aside class="node-drawer" id="node-drawer">
+        <div class="drawer-head">
+          <span>✨ 节点列表 (<span id="drawer-count">0</span>)</span>
+          <button class="btn btn-sm" style="padding:2px 7px;" onclick="toggleNodeDrawer(false)">✕</button>
         </div>
-        <div style="font-size:11px;color:var(--accent);margin-bottom:4px;">查询：${esc(l.query)}</div>
-        <div class="card-content" style="margin-bottom:0;">${esc(l.content || '（已删除）')}</div>
-      </div>`).join('');
+        <div class="drawer-body" id="drawer-list"></div>
+      </aside>
+
+      <!-- Right Floating Star Inspector -->
+      <aside class="star-inspector" id="star-inspector">
+        <div class="insp-head">
+          <div class="row-flex" id="insp-title-badges"></div>
+          <button class="btn btn-sm" style="padding:2px 7px;" onclick="closeInspector()">✕</button>
+        </div>
+        <div class="insp-body" id="insp-body"></div>
+      </aside>
+
+      <!-- Bottom Left Telemetry & Category Legend -->
+      <div class="hud-bottom-left">
+        <div class="telemetry-bar">
+          <span>总记忆<strong id="hud-total-mem">0</strong></span>
+          <span>节点<strong id="hud-total-nodes">0</strong></span>
+          <span>关系<strong id="hud-total-edges">0</strong></span>
+          <span>累计召回<strong id="hud-total-recalls">0</strong></span>
+        </div>
+        <div class="legend-row" id="hud-legend"></div>
+      </div>
+
+      <!-- Bottom Right Mode Toggles -->
+      <div class="hud-bottom-right">
+        <div class="hud-pill-group">
+          <button class="hud-pill-btn active" id="btn-auto-spin" onclick="toggleAutoSpin()">
+            <span class="status-dot" style="background:#60a5fa;box-shadow:0 0 8px #60a5fa;"></span>
+            <span id="spin-label">继续运转</span>
+          </button>
+          <button class="hud-pill-btn active" id="btn-edge-mode" onclick="toggleEdgeMode()">
+            <span class="status-dot" style="background:#a78bfa;"></span>
+            <span id="edge-label">全部关系</span>
+          </button>
+          <button class="hud-pill-btn active" id="btn-topics-toggle" onclick="toggleTopics()">
+            <span class="status-dot" style="background:#38bdf8;"></span>
+            <span>主题星团</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 2: MEMORY MANAGEMENT ==================== -->
+  <section class="view-panel" id="view-list">
+    <div class="scroll-view">
+      <!-- Filter Bar (Image 3 style) -->
+      <div class="section-card">
+        <div class="filter-grid-top">
+          <input id="filter-search" type="text" placeholder="关键字（支持 #ID / 内容 / 标签搜索）" onkeydown="if(event.key==='Enter')loadList()" />
+          <input id="filter-workspace" type="text" placeholder="工作区（可选）" onkeydown="if(event.key==='Enter')loadList()" />
+        </div>
+        <div class="filter-grid-mid">
+          <select id="filter-status" onchange="loadList()">
+            <option value="all">全部状态</option>
+            <option value="active" selected>仅活跃记忆</option>
+            <option value="archived">仅已归档</option>
+          </select>
+          <select id="filter-category" onchange="loadList()">
+            <option value="">全部类型</option>
+            <option value="preference">偏好 (preference)</option>
+            <option value="project">项目 (project)</option>
+            <option value="decision">决策 (decision)</option>
+            <option value="pitfall">踩坑 (pitfall)</option>
+            <option value="fact">事实 (fact)</option>
+            <option value="handoff">交接 (handoff)</option>
+          </select>
+          <select id="filter-sort" onchange="loadList()">
+            <option value="newest" selected>最新创建</option>
+            <option value="recent">最近召回</option>
+            <option value="freshness">鲜活度优先</option>
+            <option value="importance">重要度优先</option>
+            <option value="recalls">召回次数优先</option>
+          </select>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-primary" onclick="loadList()">筛选</button>
+          <button class="btn" onclick="resetFilters()">重置筛选</button>
+          <button class="btn" onclick="toggleAddDrawer()">➕ 新建记忆</button>
+        </div>
+
+        <!-- Collapsible Add Memory Form -->
+        <div id="add-drawer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <textarea id="new-content" rows="2" placeholder="输入需要长期记住的偏好、项目约定、踩坑结论或交接事项..."></textarea>
+            <div class="row-flex">
+              <select id="new-category" onchange="onCatChange()">
+                <option value="preference">偏好 (默认 365 天)</option>
+                <option value="project">项目 (默认 60 天)</option>
+                <option value="decision">决策 (默认 90 天)</option>
+                <option value="pitfall">踩坑 (默认 90 天)</option>
+                <option value="fact" selected>事实 (默认 30 天)</option>
+                <option value="handoff">交接 (默认 14 天)</option>
+              </select>
+              <input id="new-tags" placeholder="标签（逗号分隔）" style="flex:1;min-width:120px;" />
+              <input id="new-workspace" placeholder="工作区（可选）" style="width:130px;" />
+              <select id="new-importance" title="重要度">
+                <option value="5">重要度 5</option>
+                <option value="4">重要度 4</option>
+                <option value="3" selected>重要度 3</option>
+                <option value="2">重要度 2</option>
+                <option value="1">重要度 1</option>
+              </select>
+              <input id="new-hl" type="number" min="1" max="3650" value="30" style="width:82px;" title="半衰期（天）" />
+              <button class="btn btn-sm" onclick="setHl(180)">180天</button>
+              <button class="btn btn-sm" onclick="setHl(365)">365天</button>
+              <button class="btn btn-primary" onclick="addMemory()">保存记忆</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import & Export Card (Image 3 style) -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleIoCard()">
+          <div class="section-title">📦 导入与导出</div>
+          <span id="io-chevron" style="color:var(--muted);font-size:12px;">⌄</span>
+        </div>
+        <div id="io-card-body">
+          <div class="io-grid">
+            <!-- Export Box -->
+            <div class="io-box">
+              <h4>导出</h4>
+              <p class="io-desc">导出全部记忆，不受上方筛选条件限制。</p>
+              <div class="io-controls">
+                <select id="export-format">
+                  <option value="json" selected>JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="markdown">Markdown</option>
+                </select>
+                <button class="btn" onclick="exportAllMemories()">⬇ 导出</button>
+              </div>
+            </div>
+
+            <!-- Import Box -->
+            <div class="io-box" id="import-drop-zone">
+              <h4>导入</h4>
+              <p class="io-desc">选择文件 → 检查预览 → 确认导入（支持 JSON / CSV / Markdown，也可直接拖拽文件到此处）</p>
+              <div class="io-controls">
+                <select id="import-strategy">
+                  <option value="skip" selected>跳过重复</option>
+                  <option value="overwrite">覆盖更新</option>
+                  <option value="allow_all">全部新增</option>
+                </select>
+                <button class="btn" onclick="triggerImportPicker()">⬆ 导入</button>
+                <input id="import-file-input" type="file" accept=".json,.csv,.md,.markdown,.txt" style="display:none;" onchange="handleImportFileSelected(event)" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Memory List -->
+      <div class="row-flex" style="padding:0 4px;">
+        <span style="font-size:12.5px;color:var(--muted);">当前列表：<strong id="list-count" style="color:var(--text);">0</strong> 条记忆</span>
+      </div>
+      <div class="mem-list" id="memory-list"></div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 3: RECALL TEST ==================== -->
+  <section class="view-panel" id="view-recall">
+    <div class="scroll-view">
+      <div class="section-card">
+        <div class="section-title" style="margin-bottom:10px;">🔍 按证据召回测试（不污染上下文、不计入召回次数）</div>
+        <div class="row-flex">
+          <input id="recall-query" style="flex:1;min-width:200px;" placeholder="输入自然语言问题或关键词，例如：用户的称呼与工作区偏好" onkeydown="if(event.key==='Enter')runRecall()" />
+          <button class="btn btn-primary" onclick="runRecall()">运行召回测试</button>
+        </div>
+      </div>
+      <div class="mem-list" id="recall-results">
+        <div class="empty-state">输入问题后点击「运行召回测试」，查看分词证据权重、鲜活度与综合得分。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 4: RECALL LOGS ==================== -->
+  <section class="view-panel" id="view-logs">
+    <div class="scroll-view">
+      <div class="section-card">
+        <div class="row-flex">
+          <div class="section-title">🕒 最近召回记录</div>
+          <div class="spacer"></div>
+          <button class="btn btn-sm" onclick="loadLogs()">🔄 刷新记录</button>
+        </div>
+      </div>
+      <div class="mem-list" id="logs-list"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODAL: IMPORT PREVIEW ==================== -->
+  <div class="modal-backdrop" id="import-modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>📥 导入预览与确认</h3>
+        <button class="btn btn-sm" onclick="closeImportModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="row-flex">
+          <span class="badge" id="imp-meta-file">文件</span>
+          <span class="badge" id="imp-meta-format">格式</span>
+          <div class="spacer"></div>
+          <span style="font-size:12px;color:var(--muted);">重复策略：</span>
+          <select id="modal-import-strategy" onchange="refreshImportPreview()" style="padding:5px 9px;font-size:12px;">
+            <option value="skip">跳过重复</option>
+            <option value="overwrite">覆盖更新</option>
+            <option value="allow_all">全部新增</option>
+          </select>
+        </div>
+
+        <div class="preview-summary" id="imp-summary-badges"></div>
+        <div id="imp-warnings" style="display:none;font-size:12px;color:var(--warn);background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:8px 10px;"></div>
+
+        <div style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:11px;">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th style="width:68px;">动作</th>
+                <th style="width:76px;">分类</th>
+                <th>记忆内容</th>
+                <th style="width:72px;">半衰期</th>
+              </tr>
+            </thead>
+            <tbody id="imp-preview-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeImportModal()">取消</button>
+        <button class="btn btn-primary" id="btn-confirm-import" onclick="commitImport()">✅ 确认导入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: EDIT MEMORY ==================== -->
+  <div class="modal-backdrop" id="edit-modal">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-head">
+        <h3>✏️ 编辑记忆 <span id="edit-id-label" style="color:var(--accent);"></span></h3>
+        <button class="btn btn-sm" onclick="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <textarea id="edit-content" rows="4" placeholder="记忆内容"></textarea>
+        <div class="row-flex">
+          <select id="edit-category" style="flex:1;">
+            <option value="preference">偏好 (preference)</option>
+            <option value="project">项目 (project)</option>
+            <option value="decision">决策 (decision)</option>
+            <option value="pitfall">踩坑 (pitfall)</option>
+            <option value="fact">事实 (fact)</option>
+            <option value="handoff">交接 (handoff)</option>
+          </select>
+          <select id="edit-importance">
+            <option value="5">重要度 5</option>
+            <option value="4">重要度 4</option>
+            <option value="3">重要度 3</option>
+            <option value="2">重要度 2</option>
+            <option value="1">重要度 1</option>
+          </select>
+          <input id="edit-hl" type="number" min="1" max="3650" style="width:92px;" title="半衰期（天）" />
+        </div>
+        <div class="row-flex">
+          <input id="edit-tags" placeholder="标签（逗号分隔）" style="flex:1;" />
+          <input id="edit-workspace" placeholder="工作区" style="width:160px;" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeEditModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveMemoryEdit()">保存修改</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+<script>
+const CAT_META = {
+  preference: { label: '偏好', color: '#fbbf24', glow: '255, 205, 112', defaultHl: 365 },
+  project:    { label: '项目', color: '#60a5fa', glow: '112, 185, 255', defaultHl: 60 },
+  decision:   { label: '决策', color: '#a78bfa', glow: '180, 148, 255', defaultHl: 90 },
+  pitfall:    { label: '踩坑', color: '#fb7185', glow: '255, 132, 160', defaultHl: 90 },
+  fact:       { label: '事实', color: '#34d399', glow: '94, 234, 195',  defaultHl: 30 },
+  handoff:    { label: '交接', color: '#38bdf8', glow: '96, 212, 255',  defaultHl: 14 },
+  topic:      { label: '主题', color: '#93c5fd', glow: '150, 210, 255', defaultHl: 60 }
+};
+
+let currentTheme = localStorage.getItem('neko_theme') || 'cosmos';
+let currentTab = 'map';
+let cachedStats = { active_count: 0, archived_count: 0, total_recalls: 0, by_category: [] };
+let cachedMemories = [];
+
+// Star Map Engine State
+const mapState = {
+  mode: '3d', // '3d' | '2d'
+  autoSpin: true,
+  onlyStrongEdges: false,
+  showTopics: true,
+  categoryFilter: '',
+  searchQuery: '',
+  searchMatchIds: new Set(),
+  rawNodes: [],
+  rawEdges: [],
+  rawTopics: [],
+  rawTopicEdges: [],
+  nodes: [],      // active rendered nodes (memories + optional topics)
+  edges: [],      // active rendered edges
+  dust: [],       // orbital stardust motes around nodes
+  bgStars: [],    // deep cosmic backdrop stars
+  selectedId: null,
+  hoveredId: null,
+  rotY: 0.35,
+  rotX: 0.24,
+  targetRotY: null,
+  targetRotX: null,
+  zoom: 1.0,
+  panX: 0,
+  panY: 0,
+  dragging: false,
+  dragMoved: false,
+  lastX: 0,
+  lastY: 0,
+  velY: 0,
+  velX: 0,
+  width: 800,
+  height: 540,
+  dpr: 1,
+  projected: new Map()
+};
+
+// Pre-rendered glowing star sprites for ultra-smooth additive bloom
+const SPRITES = {};
+function makeGlowSprite(size, innerRGB, midRGB, outerRGB, withCross = false) {
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const ctx = c.getContext('2d');
+  const cx = size / 2;
+  const r = size / 2;
+
+  const g = ctx.createRadialGradient(cx, cx, 0, cx, cx, r);
+  g.addColorStop(0.0, `rgba(255, 255, 255, 1)`);
+  g.addColorStop(0.14, `rgba(${innerRGB}, 0.96)`);
+  g.addColorStop(0.34, `rgba(${midRGB}, 0.42)`);
+  g.addColorStop(0.68, `rgba(${outerRGB}, 0.11)`);
+  g.addColorStop(1.0, `rgba(${outerRGB}, 0)`);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+
+  if (withCross) {
+    ctx.save();
+    ctx.translate(cx, cx);
+    for (let k = 0; k < 2; k++) {
+      ctx.rotate(k === 0 ? 0 : Math.PI / 2);
+      const lg = ctx.createLinearGradient(-r * 0.85, 0, r * 0.85, 0);
+      lg.addColorStop(0, 'rgba(255,255,255,0)');
+      lg.addColorStop(0.42, `rgba(${innerRGB}, 0.32)`);
+      lg.addColorStop(0.5, 'rgba(255,255,255,0.92)');
+      lg.addColorStop(0.58, `rgba(${innerRGB}, 0.32)`);
+      lg.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = lg;
+      ctx.fillRect(-r * 0.85, -1.3, r * 1.7, 2.6);
+    }
+    ctx.restore();
+  }
+  return c;
+}
+
+function initSprites() {
+  SPRITES.sun = makeGlowSprite(160, '255, 240, 198', '255, 196, 108', '255, 140, 50', true);
+  SPRITES.ice = makeGlowSprite(96, '220, 244, 255', '128, 196, 255', '64, 128, 255', false);
+  SPRITES.topic = makeGlowSprite(96, '210, 238, 255', '104, 178, 255', '56, 130, 246', false);
+  SPRITES.dust = makeGlowSprite(40, '224, 242, 255', '147, 197, 253', '96, 165, 250', false);
+  for (const [k, v] of Object.entries(CAT_META)) {
+    SPRITES[k] = makeGlowSprite(96, '240, 248, 255', v.glow, v.glow, false);
+  }
+}
+
+function seededRand(seed) {
+  let s = Math.abs(Math.floor(seed)) % 2147483647;
+  if (s === 0) s = 1337;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function hashStr(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
+
+function freshColor(pct) {
+  if (pct >= 70) return '#34d399';
+  if (pct >= 40) return '#fbbf24';
+  return '#f87171';
+}
+
+async function api(url, opts = {}) {
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts
+  });
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function setTheme(t) {
+  currentTheme = t;
+  document.body.setAttribute('data-theme', t);
+  localStorage.setItem('neko_theme', t);
+  ['cosmos', 'glass', 'paper'].forEach((k) => {
+    document.getElementById(`th-${k}`).classList.toggle('active', k === t);
+  });
+}
+
+function switchTab(t) {
+  currentTab = t;
+  ['map', 'list', 'recall', 'logs'].forEach((k) => {
+    document.getElementById(`tab-${k}`).classList.toggle('active', k === t);
+    document.getElementById(`view-${k}`).classList.toggle('active', k === t);
+  });
+  if (t === 'map') {
+    setTimeout(resizeCanvas, 20);
+  } else if (t === 'list') {
+    loadList();
+  } else if (t === 'logs') {
+    loadLogs();
+  }
+}
+
+/* ==================== STAR MAP LAYOUT & RENDERING ==================== */
+function initBgStars() {
+  const rnd = seededRand(20261127);
+  mapState.bgStars = [];
+  for (let i = 0; i < 160; i++) {
+    mapState.bgStars.push({
+      x: rnd(),
+      y: rnd(),
+      r: 0.45 + rnd() * 1.35,
+      a: 0.14 + rnd() * 0.45,
+      phase: rnd() * Math.PI * 2,
+      speed: 0.4 + rnd() * 1.4
+    });
+  }
+}
+
+function rebuildStarField() {
+  const memNodes = mapState.rawNodes.map((n) => ({
+    ...n,
+    kind: 'memory',
+    key: String(n.id)
+  }));
+  const topicNodes = mapState.showTopics
+    ? mapState.rawTopics.map((t) => ({
+        ...t,
+        kind: 'topic',
+        category: 'topic',
+        key: String(t.id),
+        importance: Math.min(5, 2 + Math.floor(t.count / 2)),
+        freshness_pct: 95,
+        is_hub: false
+      }))
+    : [];
+
+  const allNodes = [...memNodes, ...topicNodes];
+  const nodeMap = new Map(allNodes.map((n) => [n.key, n]));
+
+  let allEdges = mapState.rawEdges.map((e) => ({
+    source: String(e.source),
+    target: String(e.target),
+    weight: e.weight,
+    reason: e.reason,
+    kind: 'memory'
+  }));
+  if (mapState.showTopics) {
+    allEdges = allEdges.concat(
+      mapState.rawTopicEdges.map((e) => ({
+        source: String(e.source),
+        target: String(e.target),
+        weight: e.weight,
+        reason: e.reason,
+        kind: 'topic'
+      }))
+    );
+  }
+  allEdges = allEdges.filter((e) => nodeMap.has(e.source) && nodeMap.has(e.target));
+
+  // Choose 2-3 gravitational sun hubs for organic binary/ternary galaxy clustering
+  const hubs = memNodes
+    .filter((n) => n.is_hub)
+    .sort((a, b) => (b.degree + b.importance) - (a.degree + a.importance))
+    .slice(0, 3);
+  if (hubs.length === 0 && memNodes.length > 0) hubs.push(memNodes[0]);
+
+  const hubAnchors = hubs.length === 1
+    ? [{ x: 0, y: 0, z: 0 }]
+    : hubs.length === 2
+      ? [{ x: -86, y: -42, z: 22 }, { x: 82, y: 48, z: -20 }]
+      : [{ x: -94, y: -46, z: 26 }, { x: 88, y: 44, z: -18 }, { x: 6, y: -64, z: -62 }];
+
+  const hubPosByKey = new Map();
+  const solarHubKeys = new Set();
+  hubs.forEach((h, idx) => {
+    const a = hubAnchors[idx];
+    hubPosByKey.set(h.key, a);
+    solarHubKeys.add(h.key);
+  });
+
+  // Adjacency for hub attraction
+  const adj = new Map();
+  for (const e of allEdges) {
+    if (!adj.has(e.source)) adj.set(e.source, []);
+    if (!adj.has(e.target)) adj.set(e.target, []);
+    adj.get(e.source).push({ id: e.target, w: e.weight });
+    adj.get(e.target).push({ id: e.source, w: e.weight });
   }
 
-  async function refreshAll() {
-    await loadStats();
-    await loadGraph();
-    if (currentTab === 'list') await loadList();
-    if (currentTab === 'logs') await loadLogs();
+  // Deterministic 3D galaxy coordinates + 2D force coordinates
+  allNodes.forEach((n, idx) => {
+    const rnd = seededRand(hashStr(n.key) + 97);
+    n.is_solar = solarHubKeys.has(n.key);
+    if (hubPosByKey.has(n.key)) {
+      const a = hubPosByKey.get(n.key);
+      n.x3 = a.x;
+      n.y3 = a.y;
+      n.z3 = a.z;
+    } else {
+      // Pick strongest connected hub or category-based hub
+      let anchor = hubAnchors[idx % hubAnchors.length];
+      const neighbors = adj.get(n.key) || [];
+      let bestW = -1;
+      for (const nb of neighbors) {
+        if (hubPosByKey.has(nb.id) && nb.w > bestW) {
+          bestW = nb.w;
+          anchor = hubPosByKey.get(nb.id);
+        }
+      }
+      const armAngle = (idx * 2.39996) + (n.kind === 'topic' ? 0.6 : 0);
+      const radius = n.kind === 'topic'
+        ? 44 + rnd() * 74
+        : 58 + rnd() * 136;
+      const elev = (rnd() - 0.5) * 1.45;
+      n.x3 = anchor.x + Math.cos(armAngle) * Math.cos(elev) * radius;
+      n.y3 = anchor.y + Math.sin(elev) * radius * 0.78 + Math.sin(armAngle * 1.3) * 18;
+      n.z3 = anchor.z + Math.sin(armAngle) * Math.cos(elev) * radius;
+    }
+    n.x2 = n.x3 * 1.25;
+    n.y2 = n.y3 * 1.25;
+    n.vx = 0;
+    n.vy = 0;
+    n.twinklePhase = rnd() * Math.PI * 2;
+    n.baseSize = n.is_solar
+      ? 12.2
+      : (n.kind === 'topic' ? 4.8 + Math.min(2.6, (n.count || 1) * 0.45) : 4.2 + (n.importance || 3) * 0.85);
+  });
+
+  // Generate shimmering orbital stardust motes & galaxy spiral rings around the 2-3 Solar Suns
+  const dust = [];
+  const targetDustPerMem = allNodes.length <= 25 ? 20 : (allNodes.length <= 80 ? 9 : 3);
+  for (const n of allNodes) {
+    const rnd = seededRand(hashStr(n.key + ':dust'));
+    if (n.is_solar) {
+      // Spiral orbital ring around each Golden Solar Core (LivingMemory-inspired!)
+      const ringCount = 58;
+      for (let k = 0; k < ringCount; k++) {
+        const frac = k / ringCount;
+        const spiralAngle = frac * Math.PI * 4.2 + rnd() * 0.25;
+        const orbitR = 16 + Math.pow(frac, 0.82) * 92 + (rnd() - 0.5) * 8;
+        dust.push({
+          parentKey: n.key,
+          orbitR,
+          angle: spiralAngle,
+          tiltX: 0.42 + (rnd() - 0.5) * 0.28,
+          tiltZ: -0.35 + (rnd() - 0.5) * 0.28,
+          speed: 0.12 + (1 - frac) * 0.22,
+          size: 1.35 + rnd() * 2.1,
+          alpha: 0.48 + rnd() * 0.5,
+          warm: frac < 0.22 && rnd() < 0.55,
+          twinkle: rnd() * Math.PI * 2,
+          category: n.category
+        });
+      }
+    }
+    const count = n.is_solar ? 24 : (n.kind === 'topic' ? Math.max(5, Math.floor(targetDustPerMem * 0.55)) : targetDustPerMem);
+    for (let k = 0; k < count; k++) {
+      const orbitR = n.is_solar ? (18 + Math.pow(rnd(), 0.72) * 112) : (10 + rnd() * 48);
+      const angle = rnd() * Math.PI * 2;
+      const tiltX = (rnd() - 0.5) * 1.4;
+      const tiltZ = (rnd() - 0.5) * 1.4;
+      const speed = (0.07 + rnd() * 0.26) * (rnd() > 0.5 ? 1 : -1);
+      dust.push({
+        parentKey: n.key,
+        orbitR,
+        angle,
+        tiltX,
+        tiltZ,
+        speed,
+        size: 1.15 + rnd() * 1.85,
+        alpha: 0.36 + rnd() * 0.6,
+        warm: false,
+        twinkle: rnd() * Math.PI * 2,
+        category: n.category
+      });
+    }
   }
 
-  resizeCanvas();
-  refreshAll();
+  mapState.nodes = allNodes;
+  mapState.edges = allEdges;
+  mapState.dust = dust;
+  mapState.nodeByKey = nodeMap;
+
+  updateMapHudCounts();
+  renderNodeDrawer();
+}
+
+function updateMapHudCounts() {
+  document.getElementById('hud-total-mem').textContent = cachedStats.active_count || mapState.rawNodes.length;
+  document.getElementById('hud-total-nodes').textContent = mapState.nodes.length;
+  const visibleEdges = mapState.onlyStrongEdges
+    ? mapState.edges.filter((e) => e.weight >= 0.32)
+    : mapState.edges;
+  document.getElementById('hud-total-edges').textContent = visibleEdges.length;
+  document.getElementById('hud-total-recalls').textContent = cachedStats.total_recalls || 0;
+
+  // Build category legend counts
+  const counts = {};
+  for (const n of mapState.nodes) {
+    counts[n.category] = (counts[n.category] || 0) + 1;
+  }
+  const legendEl = document.getElementById('hud-legend');
+  const order = ['preference', 'project', 'decision', 'pitfall', 'fact', 'handoff', 'topic'];
+  legendEl.innerHTML = order
+    .filter((k) => counts[k] > 0)
+    .map((k) => {
+      const m = CAT_META[k];
+      const active = mapState.categoryFilter === k ? 'active' : '';
+      return `<button class="legend-chip ${active}" onclick="toggleCategoryFilter('${k}')">
+        <span class="status-dot" style="background:${m.color};box-shadow:0 0 8px ${m.color};"></span>
+        <span>${m.label} · ${counts[k]}</span>
+      </button>`;
+    }).join('');
+}
+
+function toggleCategoryFilter(cat) {
+  mapState.categoryFilter = mapState.categoryFilter === cat ? '' : cat;
+  updateMapHudCounts();
+}
+
+function renderNodeDrawer() {
+  const el = document.getElementById('drawer-list');
+  const mems = mapState.nodes.filter((n) => n.kind === 'memory');
+  document.getElementById('drawer-count').textContent = mems.length;
+  if (mems.length === 0) {
+    el.innerHTML = '<div class="empty-state">暂无记忆星辰</div>';
+    return;
+  }
+  el.innerHTML = mems.map((n) => {
+    const m = CAT_META[n.category] || CAT_META.fact;
+    const sel = mapState.selectedId === n.key ? 'selected' : '';
+    return `<div class="drawer-item ${sel}" onclick="selectStar('${n.key}', true)">
+      <span class="status-dot" style="background:${m.color};margin-top:5px;box-shadow:0 0 8px ${m.color};"></span>
+      <div style="min-width:0;flex:1;">
+        <div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(n.label)}</div>
+        <div style="font-size:10.5px;color:var(--muted);">#${n.id} · ${m.label} · 鲜活 ${n.freshness_pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleNodeDrawer(force) {
+  const el = document.getElementById('node-drawer');
+  const open = typeof force === 'boolean' ? force : !el.classList.contains('open');
+  el.classList.toggle('open', open);
+  document.getElementById('btn-node-drawer').classList.toggle('active', open);
+}
+
+function setMapMode(m) {
+  mapState.mode = m;
+  document.getElementById('btn-mode-3d').classList.toggle('active', m === '3d');
+  document.getElementById('btn-mode-2d').classList.toggle('active', m === '2d');
+  resetCamera();
+}
+
+function toggleAutoSpin() {
+  mapState.autoSpin = !mapState.autoSpin;
+  const btn = document.getElementById('btn-auto-spin');
+  btn.classList.toggle('active', mapState.autoSpin);
+  document.getElementById('spin-label').textContent = mapState.autoSpin ? '继续运转' : '已暂停';
+}
+
+function toggleEdgeMode() {
+  mapState.onlyStrongEdges = !mapState.onlyStrongEdges;
+  const btn = document.getElementById('btn-edge-mode');
+  btn.classList.toggle('active', !mapState.onlyStrongEdges);
+  document.getElementById('edge-label').textContent = mapState.onlyStrongEdges ? '仅强关联' : '全部关系';
+  updateMapHudCounts();
+}
+
+function toggleTopics() {
+  mapState.showTopics = !mapState.showTopics;
+  document.getElementById('btn-topics-toggle').classList.toggle('active', mapState.showTopics);
+  rebuildStarField();
+}
+
+function resetCamera() {
+  mapState.rotY = 0.35;
+  mapState.rotX = 0.24;
+  mapState.targetRotY = null;
+  mapState.targetRotX = null;
+  mapState.zoom = 1.0;
+  mapState.panX = 0;
+  mapState.panY = 0;
+  mapState.velX = 0;
+  mapState.velY = 0;
+}
+
+function searchStarMap() {
+  const q = document.getElementById('map-search-input').value.trim().toLowerCase();
+  mapState.searchQuery = q;
+  mapState.searchMatchIds.clear();
+  document.getElementById('map-search-clear').style.display = q ? 'inline-flex' : 'none';
+  if (!q) return;
+
+  for (const n of mapState.nodes) {
+    const hay = `${n.label} ${n.content || ''} ${n.tags || ''} ${n.workspace || ''} #${n.id}`.toLowerCase();
+    if (hay.includes(q)) mapState.searchMatchIds.add(n.key);
+  }
+  if (mapState.searchMatchIds.size === 0) {
+    toast(`星图中未找到包含「${q}」的节点`);
+    return;
+  }
+  const firstKey = Array.from(mapState.searchMatchIds)[0];
+  selectStar(firstKey, true);
+  toast(`在星图中高亮了 ${mapState.searchMatchIds.size} 个匹配节点 ✨`);
+}
+
+function clearMapSearch() {
+  document.getElementById('map-search-input').value = '';
+  mapState.searchQuery = '';
+  mapState.searchMatchIds.clear();
+  document.getElementById('map-search-clear').style.display = 'none';
+}
+
+function resizeCanvas() {
+  const stage = document.getElementById('starmap-stage');
+  const canvas = document.getElementById('star-canvas');
+  if (!stage || !canvas) return;
+  const rect = stage.getBoundingClientRect();
+  if (rect.width < 10 || rect.height < 10) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  mapState.width = rect.width;
+  mapState.height = rect.height;
+  mapState.dpr = dpr;
+  canvas.width = Math.floor(rect.width * dpr);
+  canvas.height = Math.floor(rect.height * dpr);
+}
+
+function stepForce2D() {
+  const nodes = mapState.nodes;
+  const N = nodes.length;
+  if (N === 0) return;
+  // Gentle repulsion + spring attraction + center pull
+  for (let i = 0; i < N; i++) {
+    const a = nodes[i];
+    a.vx += -a.x2 * 0.0014;
+    a.vy += -a.y2 * 0.0014;
+    for (let j = i + 1; j < N; j++) {
+      const b = nodes[j];
+      const dx = a.x2 - b.x2;
+      const dy = a.y2 - b.y2;
+      const d2 = dx * dx + dy * dy + 160;
+      const f = 1400 / d2;
+      const d = Math.sqrt(d2);
+      const fx = (dx / d) * f;
+      const fy = (dy / d) * f;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    }
+  }
+  for (const e of mapState.edges) {
+    const a = mapState.nodeByKey.get(e.source);
+    const b = mapState.nodeByKey.get(e.target);
+    if (!a || !b) continue;
+    const dx = b.x2 - a.x2;
+    const dy = b.y2 - a.y2;
+    const d = Math.sqrt(dx * dx + dy * dy) || 1;
+    const target = 115 - e.weight * 38;
+    const k = (d - target) * 0.004 * (0.5 + e.weight);
+    const fx = (dx / d) * k;
+    const fy = (dy / d) * k;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  }
+  for (const n of nodes) {
+    n.vx *= 0.86;
+    n.vy *= 0.86;
+    n.x2 += n.vx;
+    n.y2 += n.vy;
+  }
+}
+
+function projectPoint(x3, y3, z3, cosY, sinY, cosX, sinX, cx, cy, scale) {
+  const rx = x3 * cosY - z3 * sinY;
+  const rz1 = x3 * sinY + z3 * cosY;
+  const ry = y3 * cosX - rz1 * sinX;
+  const rz = y3 * sinX + rz1 * cosX;
+  const fov = 560;
+  const persp = fov / (fov + rz + 230);
+  return {
+    sx: cx + rx * persp * scale,
+    sy: cy + ry * persp * scale,
+    depth: rz,
+    persp
+  };
+}
+
+function isNodeHighlighted(key, focusNeighbors) {
+  if (mapState.searchMatchIds.size > 0) return mapState.searchMatchIds.has(key);
+  if (mapState.categoryFilter) {
+    const n = mapState.nodeByKey.get(key);
+    return n && n.category === mapState.categoryFilter;
+  }
+  const focusKey = mapState.hoveredId || mapState.selectedId;
+  if (focusKey) return key === focusKey || focusNeighbors.has(key);
+  return true;
+}
+
+function renderStarMap(ts) {
   requestAnimationFrame(renderStarMap);
+  if (currentTab !== 'map') return;
+  const canvas = document.getElementById('star-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = mapState.width;
+  const H = mapState.height;
+  const dpr = mapState.dpr;
+  const t = (ts || 0) * 0.001;
+  const isPaper = currentTheme === 'paper';
+  const isGlass = currentTheme === 'glass';
+
+  if (mapState.mode === '3d') {
+    if (!mapState.dragging) {
+      if (mapState.targetRotY !== null) {
+        mapState.rotY += (mapState.targetRotY - mapState.rotY) * 0.08;
+        mapState.rotX += (mapState.targetRotX - mapState.rotX) * 0.08;
+        if (Math.abs(mapState.targetRotY - mapState.rotY) < 0.005) {
+          mapState.targetRotY = null;
+          mapState.targetRotX = null;
+        }
+      } else if (mapState.autoSpin) {
+        mapState.rotY += 0.0022;
+      }
+      mapState.rotY += mapState.velY;
+      mapState.rotX = Math.max(-1.25, Math.min(1.25, mapState.rotX + mapState.velX));
+      mapState.velY *= 0.92;
+      mapState.velX *= 0.92;
+    }
+  } else {
+    stepForce2D();
+  }
+
+  ctx.save();
+  ctx.scale(dpr, dpr);
+
+  // 1. Cosmic Abyssal Background + Subtle Volumetric Nebula
+  if (isPaper) {
+    const bg = ctx.createRadialGradient(W * 0.5, H * 0.45, 20, W * 0.5, H * 0.5, Math.max(W, H) * 0.72);
+    bg.addColorStop(0, '#fcf8ef');
+    bg.addColorStop(1, '#ede4d3');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+  } else {
+    const bg = ctx.createRadialGradient(W * 0.52, H * 0.48, 30, W * 0.5, H * 0.5, Math.max(W, H) * 0.75);
+    if (isGlass) {
+      bg.addColorStop(0, '#102046');
+      bg.addColorStop(0.55, '#0b1530');
+      bg.addColorStop(1, '#060c1c');
+    } else {
+      bg.addColorStop(0, '#071127');
+      bg.addColorStop(0.42, '#030815');
+      bg.addColorStop(1, '#010308');
+    }
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Volumetric deep-blue & violet cosmic nebula clouds
+    const n1x = W * 0.44 + Math.sin(t * 0.12) * 28;
+    const n1y = H * 0.46 + Math.cos(t * 0.1) * 18;
+    const neb1 = ctx.createRadialGradient(n1x, n1y, 10, n1x, n1y, Math.min(W, H) * 0.52);
+    neb1.addColorStop(0, 'rgba(37, 99, 235, 0.13)');
+    neb1.addColorStop(0.45, 'rgba(30, 58, 138, 0.06)');
+    neb1.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = neb1;
+    ctx.fillRect(0, 0, W, H);
+
+    const n2x = W * 0.62 + Math.cos(t * 0.09) * 24;
+    const n2y = H * 0.56 + Math.sin(t * 0.11) * 20;
+    const neb2 = ctx.createRadialGradient(n2x, n2y, 10, n2x, n2y, Math.min(W, H) * 0.45);
+    neb2.addColorStop(0, 'rgba(99, 102, 241, 0.11)');
+    neb2.addColorStop(0.5, 'rgba(15, 118, 110, 0.04)');
+    neb2.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = neb2;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // 2. Distant Twinkling Micro-Starfield
+  for (const s of mapState.bgStars) {
+    const tw = 0.55 + 0.45 * Math.sin(t * s.speed + s.phase);
+    ctx.fillStyle = isPaper
+      ? `rgba(120, 92, 58, ${(s.a * 0.35 * tw).toFixed(3)})`
+      : `rgba(186, 222, 255, ${(s.a * tw).toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const cx = W * 0.5 + mapState.panX;
+  const cy = H * 0.5 + mapState.panY;
+  const baseScale = Math.min(W, H) / 410 * mapState.zoom;
+  const cosY = Math.cos(mapState.rotY), sinY = Math.sin(mapState.rotY);
+  const cosX = Math.cos(mapState.rotX), sinX = Math.sin(mapState.rotX);
+
+  // Project all nodes
+  mapState.projected.clear();
+  const drawNodes = [];
+  for (const n of mapState.nodes) {
+    let p;
+    if (mapState.mode === '3d') {
+      p = projectPoint(n.x3, n.y3, n.z3, cosY, sinY, cosX, sinX, cx, cy, baseScale);
+    } else {
+      p = {
+        sx: cx + n.x2 * baseScale * 0.85,
+        sy: cy + n.y2 * baseScale * 0.85,
+        depth: 0,
+        persp: 1
+      };
+    }
+    const radius = Math.max(2.6, n.baseSize * p.persp * Math.min(1.5, Math.max(0.7, mapState.zoom)));
+    const item = { node: n, ...p, radius };
+    mapState.projected.set(n.key, item);
+    drawNodes.push(item);
+  }
+
+  // Compute focus neighbors
+  const focusKey = mapState.hoveredId || mapState.selectedId;
+  const focusNeighbors = new Set();
+  const activeEdges = mapState.onlyStrongEdges
+    ? mapState.edges.filter((e) => e.weight >= 0.32)
+    : mapState.edges;
+  if (focusKey) {
+    for (const e of activeEdges) {
+      if (e.source === focusKey) focusNeighbors.add(e.target);
+      if (e.target === focusKey) focusNeighbors.add(e.source);
+    }
+  }
+  const hasFilter = Boolean(focusKey || mapState.categoryFilter || mapState.searchMatchIds.size > 0);
+
+  // 3. Curved Cosmic Filaments (Edges)
+  ctx.save();
+  if (!isPaper) ctx.globalCompositeOperation = 'lighter';
+  for (const e of activeEdges) {
+    const a = mapState.projected.get(e.source);
+    const b = mapState.projected.get(e.target);
+    if (!a || !b) continue;
+
+    const connectedToFocus = focusKey && (e.source === focusKey || e.target === focusKey);
+    const bothHi = isNodeHighlighted(e.source, focusNeighbors) && isNodeHighlighted(e.target, focusNeighbors);
+    const depthFade = Math.max(0.25, Math.min(1, ((a.persp + b.persp) * 0.5 - 0.35) * 1.4));
+
+    let alpha = (0.09 + e.weight * 0.22) * depthFade;
+    let lw = 0.7 + e.weight * 0.8;
+    let strokeStyle;
+
+    if (connectedToFocus) {
+      alpha = 0.72;
+      lw = 1.65;
+      strokeStyle = isPaper ? `rgba(37, 99, 235, ${alpha})` : `rgba(147, 210, 255, ${alpha})`;
+    } else if (hasFilter && !bothHi) {
+      alpha *= 0.2;
+      strokeStyle = isPaper ? `rgba(120, 95, 65, ${alpha})` : `rgba(110, 165, 255, ${alpha})`;
+    } else {
+      strokeStyle = isPaper
+        ? `rgba(105, 84, 60, ${(alpha * 0.95).toFixed(3)})`
+        : `rgba(135, 192, 255, ${alpha.toFixed(3)})`;
+    }
+
+    // Subtle quadratic curve perpendicular to edge midpoint
+    const mx = (a.sx + b.sx) * 0.5;
+    const my = (a.sy + b.sy) * 0.5;
+    const dx = b.sx - a.sx;
+    const dy = b.sy - a.sy;
+    const curveSign = ((hashStr(e.source + e.target) % 2) === 0 ? 1 : -1) * 0.13;
+    const cpx = mx - dy * curveSign;
+    const cpy = my + dx * curveSign;
+
+    ctx.beginPath();
+    ctx.moveTo(a.sx, a.sy);
+    ctx.quadraticCurveTo(cpx, cpy, b.sx, b.sy);
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lw;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 4. Orbital Stardust Sparkles (Additive Celestial Bloom)
+  ctx.save();
+  if (!isPaper) ctx.globalCompositeOperation = 'lighter';
+  const dustSpin = mapState.autoSpin ? t : 0;
+  for (const d of mapState.dust) {
+    const parent = mapState.nodeByKey.get(d.parentKey);
+    if (!parent) continue;
+    const ang = d.angle + dustSpin * d.speed;
+    const ox = Math.cos(ang) * d.orbitR;
+    const oy = Math.sin(ang) * d.orbitR * Math.cos(d.tiltX);
+    const oz = Math.sin(ang) * d.orbitR * Math.sin(d.tiltZ);
+
+    let px, py, persp;
+    if (mapState.mode === '3d') {
+      const pr = projectPoint(parent.x3 + ox, parent.y3 + oy, parent.z3 + oz, cosY, sinY, cosX, sinX, cx, cy, baseScale);
+      px = pr.sx; py = pr.sy; persp = pr.persp;
+    } else {
+      px = cx + (parent.x2 + ox * 0.85) * baseScale * 0.85;
+      py = cy + (parent.y2 + oy * 0.85) * baseScale * 0.85;
+      persp = 1;
+    }
+    if (px < -30 || px > W + 30 || py < -30 || py > H + 30) continue;
+
+    const hi = !hasFilter || isNodeHighlighted(d.parentKey, focusNeighbors);
+    const tw = 0.6 + 0.4 * Math.sin(t * 2.2 + d.twinkle);
+    const alpha = d.alpha * tw * Math.min(1, persp * 1.15) * (hi ? 1 : 0.16);
+    const sz = Math.max(3.5, d.size * 5.2 * persp * Math.min(1.4, mapState.zoom));
+
+    if (isPaper) {
+      ctx.fillStyle = d.warm
+        ? `rgba(180, 83, 9, ${(alpha * 0.5).toFixed(3)})`
+        : `rgba(59, 110, 165, ${(alpha * 0.42).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(px, py, Math.max(0.8, sz * 0.14), 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      const sp = d.warm ? SPRITES.sun : SPRITES.dust;
+      ctx.drawImage(sp, px - sz * 0.5, py - sz * 0.5, sz, sz);
+    }
+  }
+  ctx.restore();
+
+  // 5. Sort Stars Back-to-Front & Render Luminous Celestial Orbs
+  drawNodes.sort((a, b) => b.depth - a.depth);
+  ctx.save();
+  if (!isPaper) ctx.globalCompositeOperation = 'lighter';
+  for (const item of drawNodes) {
+    const n = item.node;
+    const meta = CAT_META[n.category] || CAT_META.fact;
+    const isSel = n.key === mapState.selectedId;
+    const isHov = n.key === mapState.hoveredId;
+    const isSearch = mapState.searchMatchIds.has(n.key);
+    const hi = !hasFilter || isNodeHighlighted(n.key, focusNeighbors);
+    const pulse = 1 + 0.08 * Math.sin(t * 2.4 + n.twinklePhase);
+    const freshBoost = 0.55 + 0.45 * ((n.freshness_pct || 80) / 100);
+
+    if (isPaper) {
+      ctx.globalAlpha = hi ? 0.95 : 0.22;
+      ctx.beginPath();
+      ctx.arc(item.sx, item.sy, item.radius * (isSel || isHov ? 1.35 : 1), 0, Math.PI * 2);
+      ctx.fillStyle = meta.color;
+      ctx.fill();
+      if (isSel || isHov || isSearch) {
+        ctx.strokeStyle = '#1d4ed8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      continue;
+    }
+
+    const alpha = (hi ? 1.0 : 0.22) * freshBoost;
+    ctx.globalAlpha = Math.max(0.12, Math.min(1, alpha));
+
+    // Golden Solar Hub (top 2-3 focal cores) vs Crystalline Ice-Blue Celestial Star
+    const sprite = n.is_solar
+      ? SPRITES.sun
+      : (n.kind === 'topic' ? SPRITES.topic : (SPRITES[n.category] || SPRITES.ice));
+    const haloMult = n.is_solar ? 9.6 : (isSel || isHov || isSearch ? 7.2 : 5.4);
+    const drawSize = item.radius * haloMult * pulse;
+    ctx.drawImage(sprite, item.sx - drawSize * 0.5, item.sy - drawSize * 0.5, drawSize, drawSize);
+
+    // Extra crisp white-hot inner core
+    ctx.globalAlpha = hi ? 0.96 : 0.28;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(item.sx, item.sy, Math.max(1.5, item.radius * (n.is_solar ? 0.54 : 0.36)), 0, Math.PI * 2);
+    ctx.fill();
+
+    // Selection / Search luminous ring
+    if (isSel || isHov || isSearch) {
+      ctx.globalAlpha = 0.85;
+      ctx.strokeStyle = isSearch ? '#fde047' : (n.is_solar ? '#fde68a' : '#93c5fd');
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.arc(item.sx, item.sy, item.radius * 1.9 + Math.sin(t * 4) * 1.5, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+
+  // 6. Floating Glassmorphic Pill Labels (Smart Collision-Avoidance!)
+  const labelCandidates = drawNodes
+    .slice()
+    .sort((a, b) => {
+      const score = (it) => {
+        let s = -it.depth * 0.35 + (it.node.is_hub ? 500 : 0) + (it.node.importance || 2) * 35;
+        if (it.node.key === mapState.hoveredId) s += 5000;
+        if (it.node.key === mapState.selectedId) s += 4000;
+        if (mapState.searchMatchIds.has(it.node.key)) s += 3000;
+        if (focusNeighbors.has(it.node.key)) s += 1200;
+        if (it.node.kind === 'topic') s -= 40;
+        return s;
+      };
+      return score(b) - score(a);
+    });
+
+  const placedBoxes = [];
+  const maxLabels = W < 560 ? 10 : 18;
+  let shownLabels = 0;
+
+  ctx.font = '500 11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+  for (const item of labelCandidates) {
+    if (shownLabels >= maxLabels) break;
+    const n = item.node;
+    const forceShow = n.key === mapState.hoveredId || n.key === mapState.selectedId || mapState.searchMatchIds.has(n.key);
+    if (!forceShow && hasFilter && !isNodeHighlighted(n.key, focusNeighbors)) continue;
+    if (item.sx < 28 || item.sx > W - 28 || item.sy < 62 || item.sy > H - 72) continue;
+
+    const text = n.label.length > 15 ? n.label.slice(0, 15) + '…' : n.label;
+    const tw = ctx.measureText(text).width;
+    const pillW = tw + 26;
+    const pillH = 24;
+    const px = item.sx - pillW * 0.5;
+    const py = item.sy - item.radius - pillH - 6;
+
+    // Overlap check
+    const pad = 6;
+    let collides = false;
+    if (!forceShow) {
+      for (const box of placedBoxes) {
+        if (px < box.x + box.w + pad && px + pillW + pad > box.x && py < box.y + box.h + pad && py + pillH + pad > box.y) {
+          collides = true;
+          break;
+        }
+      }
+    }
+    if (collides) continue;
+    placedBoxes.push({ x: px, y: py, w: pillW, h: pillH });
+    shownLabels++;
+
+    const meta = CAT_META[n.category] || CAT_META.fact;
+    const isPriority = forceShow;
+
+    // Rounded capsule pill
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(px, py, pillW, pillH, 12);
+    if (isPaper) {
+      ctx.fillStyle = isPriority ? 'rgba(255, 253, 248, 0.96)' : 'rgba(255, 252, 245, 0.84)';
+      ctx.strokeStyle = isPriority ? meta.color : 'rgba(139, 108, 72, 0.32)';
+    } else {
+      ctx.fillStyle = isPriority ? 'rgba(13, 24, 48, 0.92)' : 'rgba(9, 16, 34, 0.78)';
+      ctx.strokeStyle = isPriority ? 'rgba(147, 197, 253, 0.65)' : 'rgba(120, 168, 255, 0.28)';
+    }
+    ctx.lineWidth = isPriority ? 1.25 : 1;
+    ctx.fill();
+    ctx.stroke();
+
+    // Colored indicator dot
+    ctx.beginPath();
+    ctx.arc(px + 11, py + pillH * 0.5, 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = meta.color;
+    ctx.fill();
+
+    // Label text
+    ctx.fillStyle = isPaper ? '#2c221a' : '#eaf2ff';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, px + 19, py + pillH * 0.5 + 0.5);
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+function pickNode(clientX, clientY) {
+  const canvas = document.getElementById('star-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+  let best = null;
+  let bestDist = 26;
+  for (const item of mapState.projected.values()) {
+    const dx = item.sx - x;
+    const dy = item.sy - y;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d < Math.max(16, item.radius + 10) && d < bestDist) {
+      best = item.node;
+      bestDist = d;
+    }
+  }
+  return best;
+}
+
+function bindCanvasEvents() {
+  const canvas = document.getElementById('star-canvas');
+  canvas.addEventListener('pointerdown', (e) => {
+    mapState.dragging = true;
+    mapState.dragMoved = false;
+    mapState.lastX = e.clientX;
+    mapState.lastY = e.clientY;
+    mapState.targetRotY = null;
+    mapState.targetRotX = null;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (mapState.dragging) {
+      const dx = e.clientX - mapState.lastX;
+      const dy = e.clientY - mapState.lastY;
+      if (Math.abs(dx) + Math.abs(dy) > 3) mapState.dragMoved = true;
+      mapState.lastX = e.clientX;
+      mapState.lastY = e.clientY;
+      if (mapState.mode === '3d') {
+        mapState.rotY += dx * 0.0065;
+        mapState.rotX = Math.max(-1.25, Math.min(1.25, mapState.rotX + dy * 0.0065));
+        mapState.velY = dx * 0.0012;
+        mapState.velX = dy * 0.0012;
+      } else {
+        mapState.panX += dx;
+        mapState.panY += dy;
+      }
+      return;
+    }
+    const hit = pickNode(e.clientX, e.clientY);
+    mapState.hoveredId = hit ? hit.key : null;
+    canvas.style.cursor = hit ? 'pointer' : 'grab';
+  });
+  canvas.addEventListener('pointerup', (e) => {
+    mapState.dragging = false;
+    if (!mapState.dragMoved) {
+      const hit = pickNode(e.clientX, e.clientY);
+      if (hit) selectStar(hit.key, false);
+      else closeInspector();
+    }
+  });
+  canvas.addEventListener('dblclick', () => resetCamera());
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 0.91 : 1.1;
+    mapState.zoom = Math.max(0.45, Math.min(2.8, mapState.zoom * factor));
+  }, { passive: false });
+}
+
+function selectStar(key, smoothFocus = false) {
+  const n = mapState.nodeByKey.get(String(key));
+  if (!n) return;
+  mapState.selectedId = n.key;
+  if (smoothFocus && mapState.mode === '3d') {
+    const r = Math.hypot(n.x3, n.z3);
+    if (r > 5) {
+      mapState.targetRotY = Math.atan2(n.x3, n.z3);
+      mapState.targetRotX = Math.max(-0.85, Math.min(0.85, -n.y3 / 240));
+    }
+  }
+  renderNodeDrawer();
+  renderInspector(n);
+}
+
+function closeInspector() {
+  mapState.selectedId = null;
+  document.getElementById('star-inspector').classList.remove('open');
+  renderNodeDrawer();
+}
+
+function renderInspector(n) {
+  const insp = document.getElementById('star-inspector');
+  const head = document.getElementById('insp-title-badges');
+  const body = document.getElementById('insp-body');
+  const meta = CAT_META[n.category] || CAT_META.fact;
+
+  insp.classList.add('open');
+
+  // Connected neighbors
+  const related = [];
+  for (const e of mapState.edges) {
+    if (e.source === n.key) {
+      const other = mapState.nodeByKey.get(e.target);
+      if (other) related.push({ node: other, reason: e.reason, weight: e.weight });
+    } else if (e.target === n.key) {
+      const other = mapState.nodeByKey.get(e.source);
+      if (other) related.push({ node: other, reason: e.reason, weight: e.weight });
+    }
+  }
+  related.sort((a, b) => b.weight - a.weight);
+
+  if (n.kind === 'topic') {
+    head.innerHTML = `<span class="badge" style="color:${meta.color};border-color:${meta.color}55;">✦ 主题星团</span><strong style="font-size:13px;">${esc(n.label)}</strong>`;
+    body.innerHTML = `
+      <div class="insp-content">该主题/标签共关联了 <strong>${related.length}</strong> 颗记忆星辰，点击下方节点即可跳转查看详情。</div>
+      <div style="font-size:12px;font-weight:700;color:var(--muted);">关联记忆星辰 (${related.length})</div>
+      ${related.map((r) => `
+        <div class="neighbor-chip" onclick="selectStar('${r.node.key}', true)">
+          <div style="font-weight:600;">${esc(r.node.label)}</div>
+          <div style="font-size:10.5px;color:var(--muted);">#${r.node.id} · ${esc(r.reason)}</div>
+        </div>
+      `).join('')}
+    `;
+    return;
+  }
+
+  head.innerHTML = `
+    <span class="badge" style="color:${meta.color};border-color:${meta.color}55;">
+      <span class="status-dot" style="background:${meta.color};"></span>${meta.label}
+    </span>
+    <span class="badge">#${n.id}</span>
+    ${n.is_hub ? '<span class="badge" style="color:#fbbf24;border-color:#fbbf2455;">☀️ 核心恒星</span>' : ''}
+  `;
+
+  const fCol = freshColor(n.freshness_pct);
+  body.innerHTML = `
+    <div class="insp-content">${esc(n.content)}</div>
+
+    <div>
+      <div class="row-flex" style="font-size:11.5px;margin-bottom:4px;">
+        <span style="color:var(--muted);">鲜活度</span>
+        <strong style="color:${fCol};">${n.freshness_pct}%</strong>
+        <div class="spacer"></div>
+        <span style="color:var(--muted);">半衰期 <strong>${n.half_life_days} 天</strong> · 重要度 <strong>${n.importance}/5</strong></span>
+      </div>
+      <div class="fresh-track"><div class="fresh-fill" style="width:${n.freshness_pct}%;background:${fCol};"></div></div>
+    </div>
+
+    <div class="row-flex" style="font-size:11px;color:var(--muted);">
+      <span>创建：${esc(n.time_label)}</span>
+      <span>·</span>
+      <span>召回：${n.recall_count || 0} 次</span>
+      ${n.workspace ? `<span>· 工作区：${esc(n.workspace)}</span>` : ''}
+    </div>
+
+    ${n.tags ? `<div class="row-flex">${n.tags.split(/[,，]+/).filter(Boolean).map((tg) => `<span class="badge"># ${esc(tg.trim())}</span>`).join('')}</div>` : ''}
+
+    <div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">快捷调整半衰期：</div>
+      <div class="row-flex">
+        ${[14, 30, 60, 90, 180, 365].map((d) => `<button class="btn btn-sm ${Number(n.half_life_days) === d ? 'active-toggle' : ''}" onclick="updateHalfLife(${n.id}, ${d})">${d}天</button>`).join('')}
+      </div>
+    </div>
+
+    <div class="row-flex" style="padding-top:4px;border-top:1px solid var(--border);">
+      <button class="btn btn-sm" onclick="openEditModal(${n.id})">✏️ 编辑</button>
+      <button class="btn btn-sm" onclick="toggleArchive(${n.id}, ${!n.archived})">${n.archived ? '♻️ 恢复' : '📦 归档'}</button>
+      <div class="spacer"></div>
+      <button class="btn btn-sm btn-danger" onclick="hardDelete(${n.id})">🗑️ 删除</button>
+    </div>
+
+    ${related.length > 0 ? `
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:2px;">关联星辰 (${related.length})</div>
+      ${related.slice(0, 8).map((r) => `
+        <div class="neighbor-chip" onclick="selectStar('${r.node.key}', true)">
+          <div style="font-weight:600;">${r.node.kind === 'topic' ? '✦ ' : ''}${esc(r.node.label)}</div>
+          <div style="font-size:10.5px;color:var(--muted);">${esc(r.reason)}</div>
+        </div>
+      `).join('')}
+    ` : ''}
+  `;
+}
+
+/* ==================== MEMORY MANAGEMENT & IMPORT/EXPORT ==================== */
+function onCatChange() {
+  const cat = document.getElementById('new-category').value;
+  const meta = CAT_META[cat] || CAT_META.fact;
+  document.getElementById('new-hl').value = meta.defaultHl;
+  document.getElementById('new-importance').value = cat === 'preference' ? '5' : '3';
+}
+function setHl(days) { document.getElementById('new-hl').value = days; }
+
+function toggleAddDrawer() {
+  const el = document.getElementById('add-drawer');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleIoCard() {
+  const body = document.getElementById('io-card-body');
+  const chev = document.getElementById('io-chevron');
+  const hidden = body.style.display === 'none';
+  body.style.display = hidden ? 'block' : 'none';
+  chev.textContent = hidden ? '⌄' : '›';
+}
+
+function resetFilters() {
+  document.getElementById('filter-search').value = '';
+  document.getElementById('filter-workspace').value = '';
+  document.getElementById('filter-status').value = 'active';
+  document.getElementById('filter-category').value = '';
+  document.getElementById('filter-sort').value = 'newest';
+  loadList();
+}
+
+function renderCard(m, extraHtml = '') {
+  const meta = CAT_META[m.category] || CAT_META.fact;
+  const fCol = freshColor(m.freshness_pct);
+  const tagsHtml = (m.tags || '').split(/[,，]+/).map((s) => s.trim()).filter(Boolean)
+    .map((tg) => `<span class="badge">#${esc(tg)}</span>`).join('');
+  return `
+    <div class="mem-card ${m.archived ? 'archived' : ''}">
+      <div class="mem-top">
+        <div class="mem-badges">
+          <span class="badge">#${m.id}</span>
+          <span class="badge" style="color:${meta.color};border-color:${meta.color}55;">
+            <span class="status-dot" style="background:${meta.color};"></span>${meta.label}
+          </span>
+          <span class="badge" style="color:${fCol};">鲜活 ${m.freshness_pct}%</span>
+          <span class="badge">半衰期 ${m.half_life_days}天</span>
+          <span class="badge">重要度 ${m.importance}/5</span>
+          ${m.archived ? '<span class="badge" style="color:var(--warn);">已归档</span>' : ''}
+          ${extraHtml}
+        </div>
+        <div class="row-flex">
+          ${!m.archived ? `<button class="btn btn-sm" onclick="focusInMap(${m.id})">🌌 星图定位</button>` : ''}
+          <button class="btn btn-sm" onclick="openEditModal(${m.id})">✏️ 编辑</button>
+          <button class="btn btn-sm" onclick="toggleArchive(${m.id}, ${!m.archived})">${m.archived ? '♻️ 恢复' : '📦 归档'}</button>
+          <button class="btn btn-sm btn-danger" onclick="hardDelete(${m.id})">🗑️</button>
+        </div>
+      </div>
+      <div class="mem-content">${esc(m.content)}</div>
+      <div class="mem-foot">
+        <div class="row-flex">
+          <span>创建：${esc(m.time_label)}</span>
+          <span>·</span>
+          <span>最近唤醒：${esc(m.last_recalled_label)}</span>
+          <span>·</span>
+          <span>召回 ${m.recall_count || 0} 次</span>
+          ${m.workspace ? `<span>· 工作区：${esc(m.workspace)}</span>` : ''}
+        </div>
+        <div class="row-flex">${tagsHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function loadStats() {
+  cachedStats = await api('/api/stats');
+  updateMapHudCounts();
+}
+
+async function loadGraph() {
+  const data = await api('/api/graph');
+  mapState.rawNodes = data.nodes || [];
+  mapState.rawEdges = data.edges || [];
+  mapState.rawTopics = data.topics || [];
+  mapState.rawTopicEdges = data.topic_edges || [];
+  if (data.stats) cachedStats = data.stats;
+  rebuildStarField();
+  if (mapState.selectedId && mapState.nodeByKey.has(mapState.selectedId)) {
+    renderInspector(mapState.nodeByKey.get(mapState.selectedId));
+  }
+}
+
+async function loadList() {
+  const params = new URLSearchParams({
+    status: document.getElementById('filter-status').value,
+    category: document.getElementById('filter-category').value,
+    workspace: document.getElementById('filter-workspace').value.trim(),
+    search: document.getElementById('filter-search').value.trim(),
+    sort: document.getElementById('filter-sort').value,
+    limit: '300'
+  });
+  const data = await api(`/api/memories?${params.toString()}`);
+  cachedMemories = data.items || [];
+  document.getElementById('list-count').textContent = cachedMemories.length;
+  const el = document.getElementById('memory-list');
+  if (cachedMemories.length === 0) {
+    el.innerHTML = '<div class="empty-state">当前筛选条件下没有记忆 🐾</div>';
+    return;
+  }
+  el.innerHTML = cachedMemories.map((m) => renderCard(m)).join('');
+}
+
+async function addMemory() {
+  const content = document.getElementById('new-content').value.trim();
+  if (!content) return toast('请先输入记忆内容');
+  const res = await api('/api/memories', {
+    method: 'POST',
+    body: JSON.stringify({
+      content,
+      category: document.getElementById('new-category').value,
+      tags: document.getElementById('new-tags').value.trim(),
+      workspace: document.getElementById('new-workspace').value.trim(),
+      importance: Number(document.getElementById('new-importance').value),
+      half_life_days: Number(document.getElementById('new-hl').value)
+    })
+  });
+  document.getElementById('new-content').value = '';
+  document.getElementById('new-tags').value = '';
+  toast(res.action === 'created' ? `已保存新记忆 #${res.memory.id} 🐾` : `已自动合并更新记忆 #${res.memory.id}`);
+  await refreshAll();
+}
+
+function openEditModal(id) {
+  const m = cachedMemories.find((x) => x.id === id) || mapState.rawNodes.find((x) => x.id === id);
+  if (!m) return;
+  document.getElementById('edit-id').value = m.id;
+  document.getElementById('edit-id-label').textContent = `#${m.id}`;
+  document.getElementById('edit-content').value = m.content || '';
+  document.getElementById('edit-category').value = m.category || 'fact';
+  document.getElementById('edit-importance').value = String(m.importance || 3);
+  document.getElementById('edit-hl').value = m.half_life_days || 30;
+  document.getElementById('edit-tags').value = m.tags || '';
+  document.getElementById('edit-workspace').value = m.workspace || '';
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+}
+
+async function saveMemoryEdit() {
+  const id = Number(document.getElementById('edit-id').value);
+  const content = document.getElementById('edit-content').value.trim();
+  if (!content) return toast('记忆内容不能为空');
+  await api('/api/update', {
+    method: 'POST',
+    body: JSON.stringify({
+      id,
+      content,
+      category: document.getElementById('edit-category').value,
+      importance: Number(document.getElementById('edit-importance').value),
+      half_life_days: Number(document.getElementById('edit-hl').value),
+      tags: document.getElementById('edit-tags').value.trim(),
+      workspace: document.getElementById('edit-workspace').value.trim()
+    })
+  });
+  closeEditModal();
+  toast(`已更新记忆 #${id} ✨`);
+  await refreshAll();
+}
+
+async function updateHalfLife(id, days) {
+  await api('/api/update', { method: 'POST', body: JSON.stringify({ id, half_life_days: days }) });
+  toast(`已将记忆 #${id} 半衰期调整为 ${days} 天`);
+  await refreshAll();
+}
+
+async function toggleArchive(id, archived) {
+  await api('/api/archive', { method: 'POST', body: JSON.stringify({ id, archived }) });
+  toast(archived ? `已归档记忆 #${id}` : `已恢复记忆 #${id}`);
+  if (archived && mapState.selectedId === String(id)) closeInspector();
+  await refreshAll();
+}
+
+async function hardDelete(id) {
+  if (!confirm(`确定要永久删除记忆 #${id} 吗？此操作无法撤销。`)) return;
+  await api('/api/delete', { method: 'POST', body: JSON.stringify({ id }) });
+  toast(`已永久删除记忆 #${id}`);
+  if (mapState.selectedId === String(id)) closeInspector();
+  await refreshAll();
+}
+
+function focusInMap(id) {
+  switchTab('map');
+  setTimeout(() => {
+    resizeCanvas();
+    selectStar(String(id), true);
+  }, 50);
+}
+
+/* ==================== EXPORT & IMPORT WORKFLOW ==================== */
+const importDraft = {
+  filename: '',
+  content: '',
+  preview: null
+};
+
+async function exportAllMemories() {
+  try {
+    const format = document.getElementById('export-format').value;
+    const res = await api(`/api/export?format=${encodeURIComponent(format)}&include_archived=1`);
+    const blob = new Blob([res.content], { type: res.mime || 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = res.filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast(`已导出全部 ${res.count} 条记忆 (${res.format.toUpperCase()}) 📥`);
+  } catch (e) {
+    toast(`导出失败：${e.message}`);
+  }
+}
+
+function triggerImportPicker() {
+  const input = document.getElementById('import-file-input');
+  input.value = '';
+  input.click();
+}
+
+function handleImportFileSelected(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  readAndPreviewImportFile(file);
+}
+
+function readAndPreviewImportFile(file) {
+  const reader = new FileReader();
+  reader.onload = async () => {
+    importDraft.filename = file.name;
+    importDraft.content = String(reader.result || '');
+    const strategy = document.getElementById('import-strategy').value;
+    document.getElementById('modal-import-strategy').value = strategy;
+    await refreshImportPreview(true);
+  };
+  reader.onerror = () => toast('读取文件失败');
+  reader.readAsText(file, 'utf-8');
+}
+
+async function refreshImportPreview(openModal = false) {
+  try {
+    const strategy = document.getElementById('modal-import-strategy').value;
+    document.getElementById('import-strategy').value = strategy;
+    const preview = await api('/api/import/preview', {
+      method: 'POST',
+      body: JSON.stringify({
+        filename: importDraft.filename,
+        content: importDraft.content,
+        duplicate_strategy: strategy
+      })
+    });
+    importDraft.preview = preview;
+    renderImportPreviewModal(preview);
+    if (openModal) document.getElementById('import-modal').classList.add('open');
+  } catch (e) {
+    toast(`解析导入文件失败：${e.message}`);
+  }
+}
+
+function renderImportPreviewModal(p) {
+  document.getElementById('imp-meta-file').textContent = `📄 ${p.filename || '未命名文件'}`;
+  document.getElementById('imp-meta-format').textContent = `格式：${String(p.format || '').toUpperCase()}`;
+
+  const summaryEl = document.getElementById('imp-summary-badges');
+  summaryEl.innerHTML = `
+    <span class="badge">共解析 ${p.total} 条</span>
+    <span class="badge act-create">将新增 ${p.planned.create} 条</span>
+    ${p.planned.overwrite > 0 ? `<span class="badge act-overwrite">将覆盖 ${p.planned.overwrite} 条</span>` : ''}
+    ${p.planned.skip > 0 ? `<span class="badge act-skip">将跳过重复 ${p.planned.skip} 条</span>` : ''}
+    ${p.invalid_count > 0 ? `<span class="badge" style="color:var(--danger);">忽略无效行 ${p.invalid_count}</span>` : ''}
+  `;
+
+  const warnEl = document.getElementById('imp-warnings');
+  if (p.warnings && p.warnings.length > 0) {
+    warnEl.style.display = 'block';
+    warnEl.textContent = '提示：' + p.warnings.join('；');
+  } else {
+    warnEl.style.display = 'none';
+  }
+
+  const tbody = document.getElementById('imp-preview-tbody');
+  const actionLabel = { create: '新增', overwrite: '覆盖', skip: '跳过' };
+  const actionCls = { create: 'act-create', overwrite: 'act-overwrite', skip: 'act-skip' };
+  tbody.innerHTML = (p.items || []).slice(0, 120).map((it) => {
+    const meta = CAT_META[it.category] || CAT_META.fact;
+    const snippet = it.content.length > 96 ? it.content.slice(0, 96) + '…' : it.content;
+    return `<tr>
+      <td><span class="badge ${actionCls[it.planned_action]}">${actionLabel[it.planned_action]}</span></td>
+      <td><span class="badge" style="color:${meta.color};">${meta.label}</span></td>
+      <td>
+        <div>${esc(snippet)}</div>
+        ${it.matched_id ? `<div style="font-size:10.5px;color:var(--muted);">匹配已有记忆 #${it.matched_id} (${it.match_type === 'exact' ? '完全一致' : '高度相似'})</div>` : ''}
+      </td>
+      <td style="color:var(--muted);">${it.half_life_days}天</td>
+    </tr>`;
+  }).join('');
+
+  if ((p.items || []).length > 120) {
+    tbody.innerHTML += `<tr><td colspan="4" style="text-align:center;color:var(--muted);">仅展示前 120 条预览，确认后将导入全部 ${p.total} 条。</td></tr>`;
+  }
+
+  const willApply = p.planned.create + p.planned.overwrite;
+  const btn = document.getElementById('btn-confirm-import');
+  btn.disabled = willApply === 0;
+  btn.textContent = willApply > 0 ? `✅ 确认导入 (${willApply} 条生效)` : '没有可写入的新记忆';
+}
+
+function closeImportModal() {
+  document.getElementById('import-modal').classList.remove('open');
+}
+
+async function commitImport() {
+  try {
+    const strategy = document.getElementById('modal-import-strategy').value;
+    const res = await api('/api/import/commit', {
+      method: 'POST',
+      body: JSON.stringify({
+        filename: importDraft.filename,
+        content: importDraft.content,
+        duplicate_strategy: strategy
+      })
+    });
+    closeImportModal();
+    toast(`导入完成！新增 ${res.created} 条，更新 ${res.updated} 条，跳过 ${res.skipped} 条 ✨`);
+    await refreshAll();
+  } catch (e) {
+    toast(`导入失败：${e.message}`);
+  }
+}
+
+function bindImportDragDrop() {
+  const zone = document.getElementById('import-drop-zone');
+  ['dragenter', 'dragover'].forEach((ev) => {
+    zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+  });
+  ['dragleave', 'drop'].forEach((ev) => {
+    zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.remove('dragover'); });
+  });
+  zone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) readAndPreviewImportFile(file);
+  });
+}
+
+/* ==================== RECALL LAB & LOGS ==================== */
+async function runRecall() {
+  const q = document.getElementById('recall-query').value.trim();
+  if (!q) return toast('请输入检索词');
+  const data = await api('/api/recall', { method: 'POST', body: JSON.stringify({ query: q, limit: 10 }) });
+  const el = document.getElementById('recall-results');
+  if (!data.items || data.items.length === 0) {
+    el.innerHTML = '<div class="empty-state">没有命中相关记忆（说明不会浪费上下文注入无关内容 ✨）</div>';
+    return;
+  }
+  el.innerHTML = data.items.map((m) =>
+    renderCard(m, `<span class="badge" style="color:var(--accent);">综合分 ${m.score} · 证据 ${m.evidence}</span>`)
+  ).join('');
+}
+
+async function loadLogs() {
+  const data = await api('/api/logs?limit=50');
+  const el = document.getElementById('logs-list');
+  if (!data.items || data.items.length === 0) {
+    el.innerHTML = '<div class="empty-state">暂无召回记录</div>';
+    return;
+  }
+  el.innerHTML = data.items.map((l) => `
+    <div class="mem-card">
+      <div class="mem-top">
+        <div class="mem-badges">
+          <span class="badge">查询：${esc(l.query)}</span>
+          <span class="badge" style="color:var(--accent);">得分 ${Number(l.score || 0).toFixed(3)}</span>
+          <span class="badge">#${l.memory_id}</span>
+        </div>
+        <span style="font-size:11px;color:var(--muted);">${esc(l.time_label)}</span>
+      </div>
+      <div class="mem-content" style="font-size:12.5px;">${esc(l.content || '（原记忆已删除）')}</div>
+    </div>
+  `).join('');
+}
+
+async function refreshAll() {
+  await Promise.all([loadStats(), loadGraph(), loadList()]);
+}
+
+// Boot
+initSprites();
+initBgStars();
+setTheme(currentTheme);
+bindCanvasEvents();
+bindImportDragDrop();
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+refreshAll();
+if (location.hash === '#list') switchTab('list');
+else if (location.hash === '#recall') switchTab('recall');
+else if (location.hash === '#logs') switchTab('logs');
+requestAnimationFrame(renderStarMap);
 </script>
 </body>
 </html>

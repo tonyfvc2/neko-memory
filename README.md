@@ -23,11 +23,11 @@
 
 **Neko Memory（猫猫的记忆）** 是一个 **100% 本地运行、零第三方依赖、无需额外 API Key** 的原生 Antigravity 插件：
 
-- **🌌 2D / 3D 可视化记忆星图**：内置原生 Sidecar 面板，支持 **2D 力导向星座图** 与 **3D 球面星空** 一键切换（拖拽旋转、滚轮缩放、点击星辰聚焦并高亮关联星座与连线理由），附带 **深空星图 / 液态玻璃 / 暖光书页** 三套主题。
+- **🌌 次世代 2D / 3D 发光银河记忆星图（v1.1 全面重制）**：内置原生 Sidecar 面板，支持 **3D 发光星团与螺旋星尘** / **2D 力导向星座图** 一键切换，核心记忆化作金色恒星与冰蓝主题星团，支持悬浮毛玻璃标签、图谱实时检索高亮、节点列表抽屉、关系过滤与 **深空 / 液态玻璃 / 暖光书页** 三套主题。
+- **📦 主动导出与带预览校验的导入（v1.1 新增）**：在「记忆管理」面板内置**导入与导出**工作流——支持一键导出全部记忆为 **JSON / CSV（带 UTF-8 BOM，Excel 零乱码）/ Markdown**；导入支持拖拽或选择文件 → **实时解析预览与重复检测** → 可选 `跳过重复` / `覆盖更新` / `全部新增` 策略后原子事务写入。
 - **⏳ 会自然淡忘（智能半衰期）**：每条记忆都有「鲜活度」，随时间按半衰期柔和衰减——不删除，只是权重变低；再次被召回时会自动唤醒刷新鲜活度。
 - **🔍 平时零上下文占用，按证据精准召回**：不会把全部记忆塞进每轮对话，只在相关时通过中文二/三元组分词 + IDF 证据权重检索最相关的 3–5 条注入。
 - **🧠 跨会话不失忆 & 自动去重**：通过本地 SQLite 永久保存在 `~/.gemini/antigravity/neko_memory/memory.db`，Antigravity 客户端升级也不会丢失；写入高相似度记忆时自动合并更新。
-- **📂 支持导入旧笔记**：可直接扫描本地 `.md` / `.txt` 笔记批量导入长期记忆。
 
 ---
 
@@ -49,7 +49,7 @@
 ### 方式一：Antigravity CLI 一键安装（推荐）
 
 ```bash
-agy plugin install https://github.com/<你的用户名>/neko-memory
+agy plugin install https://github.com/tonyfvc2/neko-memory
 ```
 
 ### 方式二：Windows 一键安装（无需单独安装 Node.js）
@@ -63,7 +63,7 @@ agy plugin install https://github.com/<你的用户名>/neko-memory
 ### 方式三：macOS / Linux 一键安装
 
 ```bash
-git clone https://github.com/<你的用户名>/neko-memory.git
+git clone https://github.com/tonyfvc2/neko-memory.git
 cd neko-memory
 chmod +x install.sh && ./install.sh
 ```
@@ -72,7 +72,7 @@ chmod +x install.sh && ./install.sh
 
 ## 🛠️ 提供的 MCP 工具
 
-安装后，Antigravity Agent 会自动获得以下 5 个本地工具：
+安装后，Antigravity Agent 会自动获得以下 6 个本地工具：
 
 | 工具名 | 功能说明 |
 | :--- | :--- |
@@ -80,7 +80,8 @@ chmod +x install.sh && ./install.sh
 | `neko_memory_remember` | 写入长期记忆（自动按分类配置半衰期并合并高相似重复项） |
 | `neko_memory_forget` | 软归档指定 ID 的记忆（可在星图面板中随时恢复） |
 | `neko_memory_list` | 列出活跃/归档记忆与数据库统计 |
-| `neko_memory_import_file` | 从本地 `.md` / `.txt` 文件批量导入记忆 |
+| `neko_memory_import_file` | 从本地 `.json` / `.csv` / `.md` / `.txt` 文件批量导入记忆（支持重复策略） |
+| `neko_memory_export_file` | 将全部本地长期记忆导出为 `.json` / `.csv` / `.md` 备份文件 |
 
 ### 打开记忆星图面板
 
@@ -101,7 +102,6 @@ npm run preview:panel
 - **数据完全归你所有**：所有记忆存储在 `~/.gemini/antigravity/neko_memory/memory.db`，随时可备份、导出或删除。
 
 ---
-
 
 ## 📄 License
 

@@ -1,6 +1,6 @@
 {
   "name": "neko-memory",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Zero-dependency local long-term memory plugin with 2D/3D interactive Star Map for Google Antigravity",
   "type": "module",
   "license": "MIT",

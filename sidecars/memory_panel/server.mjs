@@ -19,9 +19,12 @@ function handleStats() {
 function handleList(data = {}) {
   const items = store.list({
     include_archived: data.include_archived === '1' || data.include_archived === true,
+    status: data.status || '',
     category: data.category || '',
+    workspace: data.workspace || '',
     search: data.search || '',
-    limit: Number(data.limit) || 100
+    sort: data.sort || 'newest',
+    limit: Number(data.limit) || 200
   });
   return { ok: true, items };
 }
@@ -77,6 +80,36 @@ function handleLogs(data = {}) {
   return { ok: true, items: store.getRecallLogs(Number(data.limit) || 40) };
 }
 
+function handleExport(data = {}) {
+  const res = store.exportMemories({
+    format: data.format || 'json',
+    include_archived: data.include_archived !== '0' && data.include_archived !== false
+  });
+  return { ok: true, ...res };
+}
+
+function handleImportPreview(data = {}) {
+  return store.previewImport({
+    content: data.content || '',
+    format: data.format || '',
+    filename: data.filename || '',
+    duplicate_strategy: data.duplicate_strategy || 'skip',
+    defaultCategory: data.defaultCategory || 'fact',
+    defaultWorkspace: data.defaultWorkspace || ''
+  });
+}
+
+function handleImportCommit(data = {}) {
+  return store.importMemories({
+    content: data.content || '',
+    format: data.format || '',
+    filename: data.filename || '',
+    duplicate_strategy: data.duplicate_strategy || 'skip',
+    defaultCategory: data.defaultCategory || 'fact',
+    defaultWorkspace: data.defaultWorkspace || ''
+  });
+}
+
 let SidecarApp = null;
 try {
   const sdk = await import('sidecar_sdk');
@@ -104,6 +137,10 @@ if (isSidecarEnv) {
   app.api('/api/recall', handleRecall, 'POST');
   app.api('/api/logs', handleLogs, 'GET');
   app.api('/api/graph', handleGraph, 'GET');
+  app.api('/api/export', handleExport, 'GET');
+  app.api('/api/export', handleExport, 'POST');
+  app.api('/api/import/preview', handleImportPreview, 'POST');
+  app.api('/api/import/commit', handleImportCommit, 'POST');
   await app.run();
   console.log('[neko-memory sidecar] registered and running');
 } else {
@@ -123,9 +160,15 @@ if (isSidecarEnv) {
     if (req.method === 'GET' && url.pathname === '/api/memories') return sendJson(200, handleList(Object.fromEntries(url.searchParams)));
     if (req.method === 'GET' && url.pathname === '/api/logs') return sendJson(200, handleLogs(Object.fromEntries(url.searchParams)));
     if (req.method === 'GET' && url.pathname === '/api/graph') return sendJson(200, handleGraph(Object.fromEntries(url.searchParams)));
+    if (req.method === 'GET' && url.pathname === '/api/export') return sendJson(200, handleExport(Object.fromEntries(url.searchParams)));
     if (req.method === 'POST') {
       let body = '';
-      req.on('data', (c) => (body += c));
+      req.on('data', (c) => {
+        body += c;
+        if (body.length > 15 * 1024 * 1024) {
+          req.destroy();
+        }
+      });
       req.on('end', () => {
         try {
           const data = JSON.parse(body || '{}');
@@ -134,6 +177,9 @@ if (isSidecarEnv) {
           if (url.pathname === '/api/update') return sendJson(200, handleUpdate(data));
           if (url.pathname === '/api/delete') return sendJson(200, handleDelete(data));
           if (url.pathname === '/api/recall') return sendJson(200, handleRecall(data));
+          if (url.pathname === '/api/export') return sendJson(200, handleExport(data));
+          if (url.pathname === '/api/import/preview') return sendJson(200, handleImportPreview(data));
+          if (url.pathname === '/api/import/commit') return sendJson(200, handleImportCommit(data));
           sendJson(404, { error: 'Not found' });
         } catch (e) {
           sendJson(400, { error: e.message });
